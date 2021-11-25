@@ -1,0 +1,126 @@
+.rec.rec-arrow:enabled {
+    color: whitesmoke;
+    background-color: black;
+}
+  
+.rec.rec-arrow:disabled {
+    visibility: hidden;
+}
+  
+.cGKbZh:hover:enabled, .cGKbZh:focus:enabled {
+    color: whitesmoke;
+    background-color: transparent;
+}
+  
+.rec.rec-arrow:hover:enabled {
+    color:whitesmoke;
+    background-color: transparent;
+}
+  
+.rec.rec-arrow:focus:enabled {
+    color:whitesmoke;
+    background-color: transparent;
+}
+  
+.rec-carousel-item:focus {
+    background-color: transparent;
+    color: whitesmoke;
+    outline: none;
+    box-shadow: inset 0 0 1px 1px lightgrey;
+}
+
+button.rec.rec-dot:hover, .rec.rec-dot:active, .rec.rec-dot:focus {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 1px 3px rgb(17 0 255)!important;
+}
+
+button.rec.rec-dot.rec-dot_active {
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 1px 3px rgb(17 0 255)!important;
+}  
+
+button.rec.rec-dot {
+    color: black;
+    border-color: black!important;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+  
+.py-5 {
+    padding-bottom: 1rem!important;
+}
+
+.btn.btn-primary.me-7 {
+    margin-top: 1%;
+    background-color: transparent;
+    color: black;
+    background-color: rgb(17, 0, 255) !important;
+    border-color: black;
+}
+
+.btn.btn-primary.me-7:hover {
+    background-color: lightseagreen;
+}
+
+.btn.btn-primary.me-7:focus {
+    box-shadow: 0 0 0 0 black;
+    background-color: lightseagreen;
+}
+
+.numbers {
+    font-family: 'Arial', sans-serif;
+    font-size: 40px;
+    line-height: 1em;
+    text-align: center;
+    margin: 10px auto;
+    overflow: hidden;
+}
+
+.numbers__window {
+    display: inline-block;
+    overflow: hidden;
+    width: 0.5em;
+    height: 1em;
+}
+
+
+.numbers__window__digit {
+    font: inherit;
+    word-break: break-all;
+    display: block;
+    width: 0;
+    padding: 0 0.52em 0 0;
+    margin: 0 auto;
+    overflow: inherit;
+    animation: counting 0.4s steps(10) forwards infinite;
+}
+
+.numbers__window__digit::before {
+    content: attr(data-fake);
+    display: inline-block;
+    width: 100%;
+    height: auto;
+}
+
+@keyframes counting {
+    100% {
+      transform: translate3d(0, -10em, 0);
+    }
+}
+
+.numbers__window__digit--1 {
+    animation-iteration-count: 3;
+}
+.numbers__window__digit--2 {
+    animation-iteration-count: 6;
+}
+.numbers__window__digit--3 {
+    animation-iteration-count: 9;
+}
+.numbers__window__digit--4 {
+    animation-iteration-count: 12;
+}
+.numbers__window__digit--5 {
+    animation-iteration-count: 15;
+}
