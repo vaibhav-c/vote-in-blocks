@@ -5,12 +5,6 @@
 /.pnp
 .pnp.js
 
-# build
-/out
-
-# testing
-/coverage
-
 # production
 /build
 
