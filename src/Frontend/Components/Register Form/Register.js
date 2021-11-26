@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
+import axios from 'axios';
 import './Register.css';
+
 
 const Register = (props) => {
 
@@ -14,7 +16,7 @@ const Register = (props) => {
         }, 
         ocr : [],
     })
-
+    const {name,email,password,dateOfBirth,aadhar} = values.formData;
     const onChange = (event) => {
         event.preventDefault();
         let temp = values.formData;
@@ -84,7 +86,7 @@ const Register = (props) => {
         if(values.formData.image === null) {
             message += "" + cnt + ". Image cannot be empty\n";
             cnt++;
-        } else {
+        } /*else {
             let allText = "";
             for(let i = 0; i < Object.keys(values.ocr).length; i++) {
                 allText += values.ocr[i].LineText + " ";
@@ -93,9 +95,29 @@ const Register = (props) => {
                 console.log("Cannot Verify details from AADHAR");
             }
             console.log(allText);
-        }
+        }*/
         if(cnt === 1) {
-            //Do something
+            axios.post(`http://localhost:5000/api/register`,{
+                name,
+                email,
+                password,
+                dateOfBirth,
+                aadhar
+            }).then((res)=>{
+                setValues({
+                    formData: {
+                        name: '',
+                        email: '',
+                        password: '',
+                        dateOfBirth: '',
+                        aadhar: '',
+                        image: null
+                    }, 
+                    ocr : [],
+                })
+            }).catch((err)=>{
+                console.log(err.response);
+            })
         } else {
             alert(message);
         }

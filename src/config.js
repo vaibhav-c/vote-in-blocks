@@ -1,4 +1,5 @@
 const CONTRACT_NAME = process.env.CONTRACT_NAME ||'VotingApp'
+const server = process.env.server ||'http://localhost:5000'
 
 function getConfig(env) {
   switch (env) {
