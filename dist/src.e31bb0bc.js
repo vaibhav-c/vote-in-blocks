@@ -61002,7 +61002,7 @@ ShadowScrollbars.propTypes = {
 var _default = ShadowScrollbars;
 exports.default = _default;
 },{"dom-css":"../node_modules/dom-css/index.js","react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-custom-scrollbars":"../node_modules/react-custom-scrollbars/lib/index.js"}],"config.js":[function(require,module,exports) {
-const CONTRACT_NAME = "dev-1635405763428-5459954.testnet" || 'VotingApp';
+const CONTRACT_NAME = "dev-1637917060972-55779173519568" || 'VotingApp';
 
 function getConfig(env) {
   switch (env) {
@@ -61042,7 +61042,7 @@ function getConfig(env) {
       return {
         networkId: 'local',
         nodeUrl: 'http://localhost:3030',
-        keyPath: `${"C:\\Users\\Lenovo"}/.near/validator_key.json`,
+        keyPath: `${"C:\\Users\\nanda"}/.near/validator_key.json`,
         walletUrl: 'http://localhost:4000/wallet',
         contractName: CONTRACT_NAME
       };
@@ -77253,7 +77253,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49297" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53452" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
