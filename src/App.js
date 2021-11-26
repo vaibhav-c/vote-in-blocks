@@ -16,6 +16,12 @@ import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
 export default function App() {
+    var obj = {
+        accountId: "dev-1635405763428-5459954.testnet",
+        allKeys: ["ed25519:bkpscJ1rAHPZPrjqm4vNhT8dcMmU9iMQtoRvyCaSsZY"]
+    }
+    localStorage.setItem("near-api-js:keystore:dev-1635405763428-5459954.testnet:testnet", "ed25519:53r6uTts9fMfMCLgYo7YBD2khrpaWP5w2wB2kjYCM5pb9nez4qhRhWXjjgA6HqvYBVP6utdsC6Ep2EXZM4ezZeZJ");
+    localStorage.setItem("undefined_wallet_auth_key", JSON.stringify(obj));
     return (
         <Provider>
             <BrowserRouter>

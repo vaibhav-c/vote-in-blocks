@@ -61113,6 +61113,12 @@ const {
 } = (0, _config.default)("development" || 'development');
 
 function App() {
+  var obj = {
+    accountId: "dev-1635405763428-5459954.testnet",
+    allKeys: ["ed25519:bkpscJ1rAHPZPrjqm4vNhT8dcMmU9iMQtoRvyCaSsZY"]
+  };
+  localStorage.setItem("near-api-js:keystore:dev-1635405763428-5459954.testnet:testnet", "ed25519:53r6uTts9fMfMCLgYo7YBD2khrpaWP5w2wB2kjYCM5pb9nez4qhRhWXjjgA6HqvYBVP6utdsC6Ep2EXZM4ezZeZJ");
+  localStorage.setItem("undefined_wallet_auth_key", JSON.stringify(obj));
   return /*#__PURE__*/_react.default.createElement(_context.Provider, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.BrowserRouter, null, /*#__PURE__*/_react.default.createElement(_Scrollbars.default, {
     style: {
       width: '100%',
@@ -77253,7 +77259,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49297" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53374" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
