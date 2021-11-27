@@ -73,8 +73,9 @@ const Login = (props) => {
                     </div>
                     <hr className="my-4"></hr>
                     <div className="d-grid mb-2">
-                        <button className="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+                        <button className="btn btn-google btn-login text-uppercase fw-bold" type="submit" ><a href = {"http://localhost:5000/auth/google"}>
                         <i className="fab fa-google me-2"></i> Sign in with Google
+                        </a>
                         </button>
                     </div>
                     </form>

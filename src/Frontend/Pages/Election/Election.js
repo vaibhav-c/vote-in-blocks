@@ -3,6 +3,7 @@ import { Container, Card, ProgressBar, Button } from 'react-bootstrap';
 import Menubar from '../../Components/Menubar/Menubar';
 import Carousel from 'react-elastic-carousel';
 import ReactFileReader from 'react-file-reader';
+import axios from 'axios';
 import { getMaxListeners } from '../../../../Server/models/auth_models';
 
 
@@ -151,6 +152,20 @@ const Home = (props) => {
         if(Object.keys(values.election.invites).length === 0) {
             alert("Voter List cannot be empty");
         } else {
+            const {election} = values;
+            axios.post(`http://localhost:5000/api/voting`,{
+                           election
+                        }).then((res)=>{
+                            authenticate(res,()=>{
+                                setFormData({})
+                                    console.log(res);
+                                    console.log('Logged in');
+                            });
+                            
+                        }).catch((err)=>{
+                            setFormData({})
+                            console.log(err.response);
+                        })
             console.log(values);
         }
     }

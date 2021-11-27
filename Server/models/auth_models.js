@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
-const { timeStamp } = require('console');
-const { stringify } = require('querystring');
 
 const userSchema = mongoose.Schema({
 

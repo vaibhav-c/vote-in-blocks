@@ -1,13 +1,10 @@
 const express = require('express');
-const fetch = require('node-fetch');
 const {validationResult} = require('express-validator');
 const jwt = require('jsonwebtoken');
-const _ = require('lodash');
-const nodemailer = require("nodemailer");
 
 const errorHandler = require('../Helper/dbErrorHandler');
 const User = require('../models/auth_models');
-
+const Vote = require('../models/voitng_model');
 const passport = require('passport')
 require('../passport/google')
 
@@ -111,6 +108,42 @@ router.post('/login',async (req,res)=>{
         })
     }
 
+})
+
+router.post('/voting',async(req,res)=>{
+    const { ID,
+        name,
+        desc,
+        startTime,
+        endTime,
+        candidates,
+        candidateDetails,
+        invites, } = req.body.election;
+    const vote = new Vote({
+        name,
+        desc,
+        startTime,
+        endTime,
+        candidates,
+        candidateDetails,
+        invites,
+    })
+    console.log(candidateDetails);
+
+    vote.save((err) => {
+        if (err) {
+          console.log('Save error ', errorHandler(err));
+          return res.status(400).json({
+            errors: errorHandler(err)
+          });
+        } else {
+            console.log("saved");
+          return res.json({
+            success: true,
+            message: 'saved'
+          });
+        }
+    })
 })
 
 module.exports = router;
