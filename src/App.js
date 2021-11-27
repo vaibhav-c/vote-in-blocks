@@ -9,6 +9,7 @@ import Home from './Frontend/Pages/Home/Home';
 import Election from './Frontend/Pages/Election/Election';
 import Results from './Frontend/Pages/Results/Results';
 import Conducted from './Frontend/Pages/Conducted/Conducted';
+import Details from './Frontend/Pages/Details/Details';
 import { Provider } from './Context/context';
 import Scrollbars from './Frontend/Components/Scrollbars/Scrollbars';
 
@@ -16,12 +17,6 @@ import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
 export default function App() {
-    var obj = {
-        accountId: "dev-1635405763428-5459954.testnet",
-        allKeys: ["ed25519:bkpscJ1rAHPZPrjqm4vNhT8dcMmU9iMQtoRvyCaSsZY"]
-    }
-    localStorage.setItem("near-api-js:keystore:dev-1635405763428-5459954.testnet:testnet", "ed25519:53r6uTts9fMfMCLgYo7YBD2khrpaWP5w2wB2kjYCM5pb9nez4qhRhWXjjgA6HqvYBVP6utdsC6Ep2EXZM4ezZeZJ");
-    localStorage.setItem("undefined_wallet_auth_key", JSON.stringify(obj));
     return (
         <Provider>
             <BrowserRouter>
@@ -34,6 +29,7 @@ export default function App() {
                     <Route exact path = "/vote" element = {<Vote/>}/>
                     <Route exact path = "/results" element = {<Results/>}/>
                     <Route exact path = "/conducted" element = {<Conducted/>}/>
+                    <Route exact path = "/details" element = {<Details/>}/>
                     </Routes>
                 </div>
                 </Scrollbars>
