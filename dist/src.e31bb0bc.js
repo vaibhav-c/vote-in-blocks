@@ -53982,6 +53982,11 @@ const Login = props => {
     } else console.log('Please fill all the fields');
   };
 
+  const googleAuth = event => {
+    event.preventDefault();
+    window.location.href = "http://localhost:5000/api/auth/google";
+  };
+
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "containerx"
   }, /*#__PURE__*/_react.default.createElement("div", {
@@ -53994,7 +53999,7 @@ const Login = props => {
     className: "card-body p-4 p-sm-1"
   }, /*#__PURE__*/_react.default.createElement("h5", {
     className: "card-title text-center mb-5 fw-light fs-5"
-  }, "Login"), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
+  }, /*#__PURE__*/_react.default.createElement("b", null, "Login")), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
     className: "form-floating mb-3"
   }, /*#__PURE__*/_react.default.createElement("input", {
     type: "email",
@@ -54036,12 +54041,11 @@ const Login = props => {
     className: "d-grid mb-2"
   }, /*#__PURE__*/_react.default.createElement("button", {
     className: "btn btn-google btn-login text-uppercase fw-bold",
-    type: "submit"
-  }, /*#__PURE__*/_react.default.createElement("a", {
-    href: "http://localhost:5000/auth/google"
+    type: "submit",
+    onClick: googleAuth
   }, /*#__PURE__*/_react.default.createElement("i", {
     className: "fab fa-google me-2"
-  }), " Sign in with Google")))))))));
+  }), " Sign in with Google"))))))));
 };
 
 var _default = Login;
@@ -54051,7 +54055,35 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"Frontend/Components/Register Form/Register.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"Frontend/Modal/Modal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactBootstrap = require("react-bootstrap");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+const CustomModal = props => {
+  return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal, _extends({}, props, {
+    size: "lg",
+    "aria-labelledby": "contained-modal-title-vcenter",
+    centered: true
+  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Header, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Title, {
+    id: "contained-modal-title-vcenter"
+  }, "Register Process")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Body, null, /*#__PURE__*/_react.default.createElement("p", null, "Verifying Details....Please wait")));
+};
+
+var _default = CustomModal;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"Frontend/Components/Register Form/Register.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -54064,6 +54096,8 @@ var _react = _interopRequireWildcard(require("react"));
 var _axios = _interopRequireDefault(require("axios"));
 
 require("./Register.css");
+
+var _Modal = _interopRequireDefault(require("../../Modal/Modal"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -54081,7 +54115,7 @@ const Register = props => {
       aadhar: '',
       image: null
     },
-    ocr: []
+    showModal: false
   });
   const {
     name,
@@ -54100,28 +54134,6 @@ const Register = props => {
       setValues({ ...values,
         formData: temp
       });
-      const formData = new FormData();
-      formData.append("file", values.formData.image); //formData.append("url", "URL-of-Image-or-PDF-file");
-
-      formData.append("language", "eng");
-      formData.append("apikey", "cd608cfbce88957");
-      formData.append("isOverlayRequired", true);
-      jQuery.ajax({
-        url: 'https://api.ocr.space/parse/image',
-        data: formData,
-        dataType: 'json',
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (ocrParsedResult) {
-          console.log(ocrParsedResult);
-          console.log(ocrParsedResult.ParsedResults[0].TextOverlay.Lines);
-          setValues({ ...values,
-            ocr: ocrParsedResult.ParsedResults[0].TextOverlay.Lines
-          });
-        }
-      });
     } else {
       setValues({ ...values,
         formData: temp
@@ -54132,79 +54144,138 @@ const Register = props => {
 
   const onSubmit = event => {
     event.preventDefault();
+    setValues({ ...values,
+      showModal: true
+    });
     console.log(values);
-    let cnt = 1;
-    let message = "Can't go further because of following errors : \n";
+    const formData = new FormData();
+    formData.append("file", values.formData.image); //formData.append("url", "URL-of-Image-or-PDF-file");
 
-    if (values.formData.name.trim() === '') {
-      message += "" + cnt + ". Name cannot be empty\n";
-      cnt++;
-    }
+    formData.append("language", "eng");
+    formData.append("apikey", "cd608cfbce88957");
+    formData.append("isOverlayRequired", true);
+    jQuery.ajax({
+      url: 'https://api.ocr.space/parse/image',
+      data: formData,
+      dataType: 'json',
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function (ocrParsedResult) {
+        console.log(ocrParsedResult);
 
-    if (values.formData.email.trim() === '') {
-      message += "" + cnt + ". Email cannot be empty\n";
-      cnt++;
-    }
+        try {
+          let cnt = 1;
+          let message = "Can't go further because of following errors : \n";
 
-    if (values.formData.password.trim() === '') {
-      message += "" + cnt + ". Password cannot be empty\n";
-      cnt++;
-    }
+          if (values.formData.name.trim() === '') {
+            message += "" + cnt + ". Name cannot be empty\n";
+            cnt++;
+          }
 
-    if (values.formData.aadhar.trim() === '') {
-      message += "" + cnt + ". AADHAR Number cannot be empty\n";
-      cnt++;
-    }
+          if (values.formData.email.trim() === '') {
+            message += "" + cnt + ". Email cannot be empty\n";
+            cnt++;
+          }
 
-    if (values.formData.dateOfBirth.trim() === '') {
-      message += "" + cnt + ". Date of Birth cannot be empty\n";
-      cnt++;
-    }
+          if (values.formData.password.trim() === '') {
+            message += "" + cnt + ". Password cannot be empty\n";
+            cnt++;
+          }
 
-    if (values.formData.image === null) {
-      message += "" + cnt + ". Image cannot be empty\n";
-      cnt++;
-    }
-    /*else {
-      let allText = "";
-      for(let i = 0; i < Object.keys(values.ocr).length; i++) {
-          allText += values.ocr[i].LineText + " ";
+          if (values.formData.aadhar.trim() === '') {
+            message += "" + cnt + ". AADHAR Number cannot be empty\n";
+            cnt++;
+          }
+
+          if (values.formData.dateOfBirth.trim() === '') {
+            message += "" + cnt + ". Date of Birth cannot be empty\n";
+            cnt++;
+          }
+
+          if (values.formData.image === null) {
+            message += "" + cnt + ". Image cannot be empty\n";
+            cnt++;
+          } else {
+            let aNo = values.formData.aadhar;
+            let numbers = "";
+            let kL = 1;
+
+            for (let i = 0; i < aNo.length; i++) {
+              if (aNo[i] >= '0' && aNo[i] <= '9') {
+                if (kL % 4 == 1 && kL != 1) {
+                  numbers += " " + aNo[i];
+                } else {
+                  numbers += aNo[i];
+                }
+              }
+
+              kL++;
+            }
+
+            let allText = "";
+
+            for (let i = 0; i < Object.keys(ocrParsedResult.ParsedResults[0].TextOverlay.Lines).length; i++) {
+              allText += ocrParsedResult.ParsedResults[0].TextOverlay.Lines[i].LineText + " ";
+            }
+
+            console.log(numbers);
+            console.log(allText);
+
+            if (allText.toUpperCase().indexOf(values.formData.name.toUpperCase()) === -1 || allText.toUpperCase().indexOf(numbers.toUpperCase()) === -1) {
+              alert("Details mismatch from AADHAR");
+              setValues({ ...values,
+                showModal: false
+              });
+              return;
+            }
+          }
+
+          if (cnt === 1) {
+            /*axios.post(`http://localhost:5000/api/register`,{
+                name,
+                password,
+                dateOfBirth,
+                aadhar
+            }).then((res)=>{
+                setValues({
+                    formData: {
+                        name: '',
+                        password: '',
+                        dateOfBirth: '',
+                        aadhar: '',
+                        image: null
+                    }, 
+                    showModal: false,
+                })
+            }).catch((err)=>{
+                alert(err.response);
+                setValues({
+                    ...values, 
+                    showModal: false
+                });
+            })*/
+            alert("Good");
+          } else {
+            alert(message);
+            setValues({ ...values,
+              showModal: false
+            });
+          }
+        } catch (err) {
+          setValues({ ...values,
+            showModal: false
+          });
+          alert("Cannot Verify Details. Try in sometime");
+        }
       }
-      if(allText.toUpperCase().indexOf(values.formData.name.toUpperCase()) === -1 || allText.toUpperCase().indexOf(values.formData.aadhar.toUpperCase()) === -1) {
-          console.log("Cannot Verify details from AADHAR");
-      }
-      console.log(allText);
-    }*/
-
-
-    if (cnt === 1) {
-      _axios.default.post(`http://localhost:5000/api/register`, {
-        name,
-        email,
-        password,
-        dateOfBirth,
-        aadhar
-      }).then(res => {
-        setValues({
-          formData: {
-            name: '',
-            email: '',
-            password: '',
-            dateOfBirth: '',
-            aadhar: '',
-            image: null
-          },
-          ocr: []
-        });
-      }).catch(err => {
-        console.log(err.response);
-      });
-    } else {
-      alert(message);
-    }
+    });
   };
 
-  return /*#__PURE__*/_react.default.createElement("div", {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Modal.default, {
+    show: values.showModal
+  }), /*#__PURE__*/_react.default.createElement("div", {
     className: "containerx"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "row"
@@ -54216,7 +54287,7 @@ const Register = props => {
     className: "card-body p-4 p-sm-1"
   }, /*#__PURE__*/_react.default.createElement("h5", {
     className: "card-title text-center mb-5 fw-light fs-5"
-  }, "Register"), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
+  }, /*#__PURE__*/_react.default.createElement("b", null, "Register")), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
     className: "form-floating mb-3"
   }, /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
@@ -54228,6 +54299,17 @@ const Register = props => {
   }), /*#__PURE__*/_react.default.createElement("label", {
     htmlFor: "floatingInput"
   }, "Name")), /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-floating mb-3"
+  }, /*#__PURE__*/_react.default.createElement("input", {
+    type: "email",
+    name: "email",
+    className: "form-control",
+    id: "floatingInput",
+    placeholder: "Email",
+    onChange: onChange
+  }), /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "floatingInput"
+  }, "Email")), /*#__PURE__*/_react.default.createElement("div", {
     className: "form-floating mb-3"
   }, /*#__PURE__*/_react.default.createElement("input", {
     type: "text",
@@ -54252,17 +54334,6 @@ const Register = props => {
   }, "Date Of Birth")), /*#__PURE__*/_react.default.createElement("div", {
     className: "form-floating mb-3"
   }, /*#__PURE__*/_react.default.createElement("input", {
-    type: "email",
-    name: "email",
-    className: "form-control",
-    id: "floatingInput",
-    placeholder: "Email",
-    onChange: onChange
-  }), /*#__PURE__*/_react.default.createElement("label", {
-    htmlFor: "floatingInput"
-  }, "Email address")), /*#__PURE__*/_react.default.createElement("div", {
-    className: "form-floating mb-3"
-  }, /*#__PURE__*/_react.default.createElement("input", {
     type: "password",
     name: "password",
     className: "form-control",
@@ -54277,7 +54348,7 @@ const Register = props => {
     }
   }, /*#__PURE__*/_react.default.createElement("label", {
     htmlFor: "floatingPassword"
-  }, "Photo Identification"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("input", {
+  }, "AADHAR Image"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("input", {
     type: "file",
     name: "image",
     onChange: onChange
@@ -54286,12 +54357,12 @@ const Register = props => {
   }, /*#__PURE__*/_react.default.createElement("button", {
     className: "btn btn-primary btn-login text-uppercase fw-bold",
     onClick: onSubmit
-  }, "Sign Up"))))))));
+  }, "Sign Up")))))))));
 };
 
 var _default = Register;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","./Register.css":"Frontend/Components/Register Form/Register.css"}],"Frontend/Pages/Login/Login.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","./Register.css":"Frontend/Components/Register Form/Register.css","../../Modal/Modal":"Frontend/Modal/Modal.js"}],"Frontend/Pages/Login/Login.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -82609,8 +82680,7 @@ const userSchema = mongoose.Schema({
     required: true
   },
   dateOfBirth: {
-    type: Date,
-    required: true
+    type: Date
   },
   aadhar: {
     type: String,
@@ -82657,7 +82727,6 @@ const Home = props => {
   const [values, setValues] = (0, _react.useState)({
     position: 1,
     election: {
-      ID: '',
       name: '',
       desc: '',
       startTime: '',
@@ -83320,7 +83389,267 @@ const Vote = props => {
 
 var _default = Vote;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","../../Components/Conducted Card/Conducted Card":"Frontend/Components/Conducted Card/Conducted Card.js"}],"Context/context.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","../../Components/Conducted Card/Conducted Card":"Frontend/Components/Conducted Card/Conducted Card.js"}],"Frontend/Pages/Details/Details.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _axios = _interopRequireDefault(require("axios"));
+
+var _Modal = _interopRequireDefault(require("../../Modal/Modal"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+const Details = props => {
+  const [values, setValues] = (0, _react.useState)({
+    formData: {
+      name: '',
+      password: '',
+      dateOfBirth: '',
+      aadhar: '',
+      image: null
+    },
+    showModal: false
+  });
+  const {
+    name,
+    email,
+    password,
+    dateOfBirth,
+    aadhar
+  } = values.formData;
+
+  const onChange = event => {
+    event.preventDefault();
+    let temp = values.formData;
+
+    if (event.target.name === 'image') {
+      temp[event.target.name] = event.target.files[0];
+      setValues({ ...values,
+        formData: temp
+      });
+    } else {
+      setValues({ ...values,
+        formData: temp
+      });
+      temp[event.target.name] = event.target.value;
+    }
+  };
+
+  const onSubmit = event => {
+    event.preventDefault();
+    setValues({ ...values,
+      showModal: true
+    });
+    console.log(values);
+    const formData = new FormData();
+    formData.append("file", values.formData.image); //formData.append("url", "URL-of-Image-or-PDF-file");
+
+    formData.append("language", "eng");
+    formData.append("apikey", "cd608cfbce88957");
+    formData.append("isOverlayRequired", true);
+    jQuery.ajax({
+      url: 'https://api.ocr.space/parse/image',
+      data: formData,
+      dataType: 'json',
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function (ocrParsedResult) {
+        console.log(ocrParsedResult);
+
+        try {
+          let cnt = 1;
+          let message = "Can't go further because of following errors : \n";
+
+          if (values.formData.name.trim() === '') {
+            message += "" + cnt + ". Name cannot be empty\n";
+            cnt++;
+          }
+
+          if (values.formData.password.trim() === '') {
+            message += "" + cnt + ". Password cannot be empty\n";
+            cnt++;
+          }
+
+          if (values.formData.aadhar.trim() === '') {
+            message += "" + cnt + ". AADHAR Number cannot be empty\n";
+            cnt++;
+          }
+
+          if (values.formData.dateOfBirth.trim() === '') {
+            message += "" + cnt + ". Date of Birth cannot be empty\n";
+            cnt++;
+          }
+
+          if (values.formData.image === null) {
+            message += "" + cnt + ". Image cannot be empty\n";
+            cnt++;
+          } else {
+            let aNo = values.formData.aadhar;
+            let numbers = "";
+            let kL = 1;
+
+            for (let i = 0; i < aNo.length; i++) {
+              if (aNo[i] >= '0' && aNo[i] <= '9') {
+                if (kL % 4 == 1 && kL != 1) {
+                  numbers += " " + aNo[i];
+                } else {
+                  numbers += aNo[i];
+                }
+              }
+
+              kL++;
+            }
+
+            let allText = "";
+
+            for (let i = 0; i < Object.keys(ocrParsedResult.ParsedResults[0].TextOverlay.Lines).length; i++) {
+              allText += ocrParsedResult.ParsedResults[0].TextOverlay.Lines[i].LineText + " ";
+            }
+
+            if (allText.toUpperCase().indexOf(values.formData.name.toUpperCase()) === -1 || allText.toUpperCase().indexOf(numbers.toUpperCase()) === -1) {
+              alert("Details mismatch from AADHAR");
+              setValues({ ...values,
+                showModal: false
+              });
+              return;
+            }
+          }
+
+          if (cnt === 1) {
+            /*axios.post(`http://localhost:5000/api/register`,{
+                name,
+                password,
+                dateOfBirth,
+                aadhar
+            }).then((res)=>{
+                setValues({
+                    formData: {
+                        name: '',
+                        password: '',
+                        dateOfBirth: '',
+                        aadhar: '',
+                        image: null
+                    }, 
+                    showModal: false
+                })
+            }).catch((err)=>{
+                alert(err.response);
+                setValues({
+                    ...values, 
+                    showModal: false
+                });
+            })*/
+            alert("Good");
+          } else {
+            alert(message);
+            setValues({ ...values,
+              showModal: false
+            });
+          }
+        } catch (err) {
+          setValues({ ...values,
+            showModal: false
+          });
+          alert("Cannot Verify Details. Try in sometime");
+        }
+      }
+    });
+  };
+
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Modal.default, {
+    show: values.showModal
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "containerx",
+    style: {
+      marginTop: '50px'
+    }
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "col-sm-2 col-md-7 col-lg-10 mx-auto"
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "card border-0 shadow rounded-3 my-5"
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "card-body p-4 p-sm-1"
+  }, /*#__PURE__*/_react.default.createElement("h5", {
+    className: "card-title text-center mb-5 fw-light fs-5"
+  }, /*#__PURE__*/_react.default.createElement("b", null, "Register")), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-floating mb-3"
+  }, /*#__PURE__*/_react.default.createElement("input", {
+    type: "text",
+    name: "name",
+    className: "form-control",
+    id: "floatingInput",
+    placeholder: "Name",
+    onChange: onChange
+  }), /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "floatingInput"
+  }, "Name")), /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-floating mb-3"
+  }, /*#__PURE__*/_react.default.createElement("input", {
+    type: "text",
+    name: "aadhar",
+    className: "form-control",
+    id: "floatingInput",
+    placeholder: "AADHAR",
+    onChange: onChange
+  }), /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "floatingInput"
+  }, "AADHAR Number")), /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-floating mb-3"
+  }, /*#__PURE__*/_react.default.createElement("input", {
+    type: "date",
+    name: "dateOfBirth",
+    className: "form-control",
+    id: "floatingInput",
+    placeholder: "Date of Birth",
+    onChange: onChange
+  }), /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "floatingInput"
+  }, "Date Of Birth")), /*#__PURE__*/_react.default.createElement("div", {
+    className: "form-floating mb-3"
+  }, /*#__PURE__*/_react.default.createElement("input", {
+    type: "password",
+    name: "password",
+    className: "form-control",
+    id: "floatingPassword",
+    placeholder: "Password",
+    onChange: onChange
+  }), /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "floatingPassword"
+  }, "Password")), /*#__PURE__*/_react.default.createElement("div", {
+    style: {
+      marginBottom: '8px'
+    }
+  }, /*#__PURE__*/_react.default.createElement("label", {
+    htmlFor: "floatingPassword"
+  }, "AADHAR Image"), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("input", {
+    type: "file",
+    name: "image",
+    onChange: onChange
+  })), /*#__PURE__*/_react.default.createElement("div", {
+    className: "d-grid"
+  }, /*#__PURE__*/_react.default.createElement("button", {
+    className: "btn btn-primary btn-login text-uppercase fw-bold",
+    onClick: onSubmit
+  }, "Sign Up")))))))));
+};
+
+var _default = Details;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../Modal/Modal":"Frontend/Modal/Modal.js"}],"Context/context.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -85043,6 +85372,8 @@ var _Results = _interopRequireDefault(require("./Frontend/Pages/Results/Results"
 
 var _Conducted = _interopRequireDefault(require("./Frontend/Pages/Conducted/Conducted"));
 
+var _Details = _interopRequireDefault(require("./Frontend/Pages/Details/Details"));
+
 var _context = require("./Context/context");
 
 var _Scrollbars = _interopRequireDefault(require("./Frontend/Components/Scrollbars/Scrollbars"));
@@ -85087,9 +85418,13 @@ function App() {
     exact: true,
     path: "/conducted",
     element: /*#__PURE__*/_react.default.createElement(_Conducted.default, null)
+  }), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
+    exact: true,
+    path: "/details",
+    element: /*#__PURE__*/_react.default.createElement(_Details.default, null)
   }))))));
 }
-},{"regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","react":"../node_modules/react/index.js","./global.css":"global.css","react-router-dom":"../node_modules/react-router-dom/index.js","../node_modules/bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./Frontend/Pages/Vote/Vote":"Frontend/Pages/Vote/Vote.js","./Frontend/Pages/Login/Login":"Frontend/Pages/Login/Login.js","./Frontend/Pages/Home/Home":"Frontend/Pages/Home/Home.js","./Frontend/Pages/Election/Election":"Frontend/Pages/Election/Election.js","./Frontend/Pages/Results/Results":"Frontend/Pages/Results/Results.js","./Frontend/Pages/Conducted/Conducted":"Frontend/Pages/Conducted/Conducted.js","./Context/context":"Context/context.js","./Frontend/Components/Scrollbars/Scrollbars":"Frontend/Components/Scrollbars/Scrollbars.js","./config":"config.js"}],"../node_modules/near-api-js/lib/key_stores/keystore.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","react":"../node_modules/react/index.js","./global.css":"global.css","react-router-dom":"../node_modules/react-router-dom/index.js","../node_modules/bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./Frontend/Pages/Vote/Vote":"Frontend/Pages/Vote/Vote.js","./Frontend/Pages/Login/Login":"Frontend/Pages/Login/Login.js","./Frontend/Pages/Home/Home":"Frontend/Pages/Home/Home.js","./Frontend/Pages/Election/Election":"Frontend/Pages/Election/Election.js","./Frontend/Pages/Results/Results":"Frontend/Pages/Results/Results.js","./Frontend/Pages/Conducted/Conducted":"Frontend/Pages/Conducted/Conducted.js","./Frontend/Pages/Details/Details":"Frontend/Pages/Details/Details.js","./Context/context":"Context/context.js","./Frontend/Components/Scrollbars/Scrollbars":"Frontend/Components/Scrollbars/Scrollbars.js","./config":"config.js"}],"../node_modules/near-api-js/lib/key_stores/keystore.js":[function(require,module,exports) {
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyStore = void 0;
@@ -101196,7 +101531,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51135" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62177" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

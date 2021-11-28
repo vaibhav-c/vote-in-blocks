@@ -15,19 +15,11 @@ router.get('/auth/google',
   passport.authenticate('google', { scope: ['email','profile'] }));
 
 router.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
+  passport.authenticate('google', { failureRedirect: `${process.env.CLIENT_URL}/details` }),
   function(req, res) {
-    const token = jwt.sign({ _id: foundUsername._id},process.env.SECRET,{expiresIn: '7d'});
-    res.redirect(`${process.env.CLIENT_URL}/profile`);
-    res.json({
-        token,
-        user:{
-            username,
-            email
-        }
-        
-    })
-    res.end();
+      console.log("here");
+    res.redirect(`${process.env.CLIENT_URL}/home?${req.user.email}&${req.user.aadhar}`);
+    
   }
 );
 

@@ -9,6 +9,7 @@ import Home from './Frontend/Pages/Home/Home';
 import Election from './Frontend/Pages/Election/Election';
 import Results from './Frontend/Pages/Results/Results';
 import Conducted from './Frontend/Pages/Conducted/Conducted';
+import Details from './Frontend/Pages/Details/Details';
 import { Provider } from './Context/context';
 import Scrollbars from './Frontend/Components/Scrollbars/Scrollbars';
 
@@ -28,6 +29,7 @@ export default function App() {
                     <Route exact path = "/vote" element = {<Vote/>}/>
                     <Route exact path = "/results" element = {<Results/>}/>
                     <Route exact path = "/conducted" element = {<Conducted/>}/>
+                    <Route exact path = "/details" element = {<Details/>}/>
                     </Routes>
                 </div>
                 </Scrollbars>

@@ -19,35 +19,37 @@ passport.use(new GoogleStrategy({
   },
   async function(accessToken, refreshToken, profile, done) {
     
-    const {displayName , emails} = profile;
-      email=emails[0].value;
-      username = displayName;
-      //console.log(displayName,email);
+      const {photos , emails} = profile;
+      email=emails[0].value
+      photo = photos[0].value;
+      //console.log(profile);
       let foundEmail = await User.findOne({
         email
       })
-      let foundUsername = await User.findOne({
-        username
-      })
       if(foundEmail){
         done(null,foundEmail);
-        //console.log('here');
-      }  
-      else if(foundUsername){
-        done(null,foundUsername);
+        
       }
       else{
         const user = new User({
-          username,
+          name: "undefined",
           email,
-      });
-      user.save((err) => {
+          password: "undefined",
+          dateOfBirth: undefined,
+          aadhar: "undefined"
+        });
+        user.save((err) => {
           if (err) {
-            done(err,null);
-          } else {
-            done(null,user)
-          }
-      })
-  }
+            console.log('Save error', err);
+            
+          } 
+          else
+          done(null,user)
+        })
+        console.log(user);
+        
+        done(null,user)
+        
+      }
 }
 ));

@@ -16,7 +16,6 @@ const Home = (props) => {
     const [values, setValues] = useState({
         position: 1,
         election: {
-            ID: '',
             name: '',
             desc: '',
             startTime: '',

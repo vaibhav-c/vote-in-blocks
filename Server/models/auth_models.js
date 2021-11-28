@@ -22,7 +22,6 @@ const userSchema = mongoose.Schema({
     },
     dateOfBirth:{
         type: Date,
-        required: true
     },
     aadhar:{
         type: String,
