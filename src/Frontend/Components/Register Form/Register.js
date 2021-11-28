@@ -114,8 +114,9 @@ const Register = (props) => {
                         }
                     }
                     if(cnt === 1) {
-                        /*axios.post(`http://localhost:5000/api/register`,{
+                        axios.post(`http://localhost:5000/api/register`,{
                             name,
+                            email,
                             password,
                             dateOfBirth,
                             aadhar
@@ -136,8 +137,8 @@ const Register = (props) => {
                                 ...values, 
                                 showModal: false
                             });
-                        })*/
-                        alert("Good");
+                        })
+                        //alert("Good");
                     } else {
                         alert(message);
                         setValues({

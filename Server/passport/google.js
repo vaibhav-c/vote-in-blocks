@@ -3,11 +3,11 @@ const passport = require('passport')
 const User = require('../models/auth_models');
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
-  });
+    done(null, user);
+});
   
-passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
+passport.deserializeUser(function(user, done) {
+    User.findOne({email: user.email}, function(err, user) {
       done(err, user);
     });
 });
@@ -28,28 +28,15 @@ passport.use(new GoogleStrategy({
       })
       if(foundEmail){
         done(null,foundEmail);
-        
-      }
-      else{
-        const user = new User({
-          name: "undefined",
-          email,
-          password: "undefined",
-          dateOfBirth: undefined,
+      } else {
+        //do something
+        let foundEmail = {
+          email: email,
           aadhar: "undefined"
-        });
-        user.save((err) => {
-          if (err) {
-            console.log('Save error', err);
-            
-          } 
-          else
-          done(null,user)
-        })
-        console.log(user);
-        
-        done(null,user)
-        
+        }
+        console.log(foundEmail);
+        done(null, foundEmail);
       }
+    
 }
 ));

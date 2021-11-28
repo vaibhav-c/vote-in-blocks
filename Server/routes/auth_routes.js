@@ -4,10 +4,9 @@ const jwt = require('jsonwebtoken');
 
 const errorHandler = require('../Helper/dbErrorHandler');
 const User = require('../models/auth_models');
-const Vote = require('../models/voitng_model');
+const Vote = require('../models/voting_model');
 const passport = require('passport')
 require('../passport/google')
-
 
 const router = express.Router();
 
@@ -15,15 +14,25 @@ router.get('/auth/google',
   passport.authenticate('google', { scope: ['email','profile'] }));
 
 router.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: `${process.env.CLIENT_URL}/details` }),
+  passport.authenticate('google'),
   function(req, res) {
-      console.log("here");
-    res.redirect(`${process.env.CLIENT_URL}/home?${req.user.email}&${req.user.aadhar}`);
-    
+      if(req.user.aadhar === "undefined") {
+        res.redirect(`${process.env.CLIENT_URL}/details?${req.user.email}`)
+      } else {
+        console.log(req)
+        const token = jwt.sign({
+            name: req.user.name,
+            email: req.user.email,
+            aadhar: req.user.aadhar,
+            dateOfBirth: req.user.dateOfBirth
+        }, process.env.SECRET, {expiresIn: 50000})
+        res.redirect(`${process.env.CLIENT_URL}/home?${token}`);
+      }
   }
 );
 
 router.post('/register',async(req,res)=>{
+    console.log("here at register")
     const { name,
         email,
         password,
@@ -103,14 +112,14 @@ router.post('/login',async (req,res)=>{
 })
 
 router.post('/voting',async(req,res)=>{
-    const { ID,
+    const {
         name,
         desc,
         startTime,
         endTime,
         candidates,
         candidateDetails,
-        invites, } = req.body.election;
+        invites, adminEmail, resultsDeclared} = req.body.election;
     const vote = new Vote({
         name,
         desc,
@@ -119,6 +128,8 @@ router.post('/voting',async(req,res)=>{
         candidates,
         candidateDetails,
         invites,
+        adminEmail,
+        resultsDeclared
     })
     console.log(candidateDetails);
 

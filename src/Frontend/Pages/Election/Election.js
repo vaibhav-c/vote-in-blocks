@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Container, Card, ProgressBar, Button } from 'react-bootstrap';
 import Menubar from '../../Components/Menubar/Menubar';
 import Carousel from 'react-elastic-carousel';
 import ReactFileReader from 'react-file-reader';
 import axios from 'axios';
 import { getMaxListeners } from '../../../../Server/models/auth_models';
+import { Context } from '../../../Context/context';
 
 
-const Home = (props) => {
-    /*const steps = [
-        {name: 'One', component: <One/>},
-        {name: 'Two', component: <Two/>},
-        {name: 'Three', component: <Three/>},
-    ];*/
+const Election = (props) => {
+    const context = useContext(Context);
+    
+    if(localStorage.getItem("email") === undefined) {
+        window.location.pathname = "/";
+    }
     const [values, setValues] = useState({
         position: 1,
         election: {
@@ -23,7 +24,8 @@ const Home = (props) => {
             candidates: 0,
             candidateDetails: [],
             invites: [],
-
+            resultsDeclared: false,
+            adminEmail: localStorage.getItem("email")
         }
     });
 
@@ -153,18 +155,19 @@ const Home = (props) => {
         } else {
             const {election} = values;
             axios.post(`http://localhost:5000/api/voting`,{
-                           election
-                        }).then((res)=>{
-                            authenticate(res,()=>{
-                                setFormData({})
-                                    console.log(res);
-                                    console.log('Logged in');
-                            });
-                            
-                        }).catch((err)=>{
-                            setFormData({})
-                            console.log(err.response);
-                        })
+                   election
+                }).then((res)=>{
+                    authenticate(res,()=>{
+                        window.location.reload();
+                        //setFormData({})
+                        //    console.log(res);
+                        //    console.log('Logged in');
+                    });
+                }).catch((err)=>{
+                    //setFormData({})
+                    window.location.reload();
+                    console.log(err.response);
+                })
             console.log(values);
         }
     }
@@ -288,4 +291,4 @@ const Home = (props) => {
     );
 }
 
-export default Home;
+export default Election;

@@ -1,20 +1,38 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import CustomModal from '../../Modal/Modal';
+import { Context } from '../../../Context/context';
 
 
 const Details = (props) => {
-
+    
+    const context = useContext(Context);
     const [values, setValues] = useState({
         formData: {
             name: '',
             password: '',
+            email: '',
             dateOfBirth: '',
             aadhar: '',
             image: null,
         }, 
         showModal:false
     })
+    
+    useEffect(() => {
+        let s = window.location.href
+        if(s.indexOf('?') === -1) {
+            window.location.replace('/');
+        }
+        let temp = values.formData;
+        let s1 = window.location.href.split("?")[1];
+        temp.email = s1.substring(0, s1.length - 1);
+        setValues({
+            ...values,
+            formData: temp
+        })
+    }, []);
+
     const {name,email,password,dateOfBirth,aadhar} = values.formData;
     const onChange = (event) => {
         event.preventDefault();
@@ -107,16 +125,21 @@ const Details = (props) => {
                         }
                     }
                     if(cnt === 1) {
-                        /*axios.post(`http://localhost:5000/api/register`,{
+                        axios.post(`http://localhost:5000/api/register`,{
                             name,
+                            email,
                             password,
                             dateOfBirth,
                             aadhar
                         }).then((res)=>{
+                            window.location.pathname = "/home";
+                            //set user
+                            context.setUser({email: values.email, dateOfBirth: values.dateOfBirth, name: values.name, aadhar: values.aadhar});
                             setValues({
                                 formData: {
                                     name: '',
                                     password: '',
+                                    email: '',
                                     dateOfBirth: '',
                                     aadhar: '',
                                     image: null
@@ -129,8 +152,8 @@ const Details = (props) => {
                                 ...values, 
                                 showModal: false
                             });
-                        })*/
-                        alert("Good");
+                        })
+                        //alert("Good");
                     } else {
                         alert(message);
                         setValues({

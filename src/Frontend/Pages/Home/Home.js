@@ -1,22 +1,42 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Menubar from '../../Components/Menubar/Menubar';
 import {Card, Container, Button} from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
+import { isExpired, decodeToken } from "react-jwt";
+import { Context } from '../../../Context/context';
 import './Home.css';
 
 const Home = (props) => {
+
+    const context = useContext(Context);
+    console.log(context);
+
+    useEffect(() => {
+        let s = window.location.href;
+        if(s.indexOf("?") !== -1) {
+            const token = s.split("?")[1];
+            const decoded = decodeToken(token.substring(0, token.length - 1));
+            console.log(decoded);
+            //set user
+            if(localStorage.getItem("email") === undefined && isExpired(token.substring(0, token.length - 1))) {
+                window.location.href = "/";
+            }
+            context.setUser({email: decoded.email, dateOfBirth: decoded.dateOfBirth, name: decoded.name, aadhar: decoded.aadhar});
+        }
+    }, []);
+
     return (
         <>
             <Menubar/>
             <Container>
-                <Card style={{ width: '100%', marginTop: '30px', marginBottom: '80px', height: '100%', display: 'flex'}}>
+                <Card style={{ width: '100%', marginTop: '30px', marginBottom: '80px', height: '100%', display: 'flex', backgroundColor: "black"}}>
                     <Card.Body style = {{width: '100%'}}>
                         <Card.Img variant="top" style = {{borderRadius: '50%', overflow: 'hidden', float: 'right', height: '100px', width: '100px'}} src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTL8c4Os_HcIVhcyJZno7LiC6YXxR5fHTlcEAcTffa7-vQqVoMv3g7t_DsQ8i2qmEIoU3M&usqp=CAU' />
-                        <Card.Title style = {{marginLeft: '20px'}}>Hey You</Card.Title>
+                        <Card.Title style = {{marginLeft: '20px'}}></Card.Title>
                         <Card.Img variant="top" style = {{overflow: 'hidden', float: 'left', height: '200px', width: '300px', marginRight: '20px'}} src='https://images1.livehindustan.com/uploadimage/library/2021/07/02/16_9/16_9_6/aadhar_card__1625226505.jpg'></Card.Img>
-                        <Card.Title style = {{marginLeft: '10px'}}>Hey You</Card.Title>
-                        <Card.Title style = {{marginLeft: '10px'}}>Hey You</Card.Title>
-                        <Card.Title style = {{marginLeft: '10px'}}>Hey You</Card.Title>
+                        <Card.Title style = {{marginLeft: '10px', marginBottom: '20px', marginTop: '30px'}}><span style = {{color: 'orange'}}>Email: {localStorage.getItem("email")}</span></Card.Title>
+                        <Card.Title style = {{marginLeft: '10px', marginBottom: '20px'}}><span style = {{color: 'white'}}>Name: {localStorage.getItem("name")}</span></Card.Title>
+                        <Card.Title style = {{marginLeft: '10px', marginBottom: '20px'}}><span style = {{color: 'green'}}>AADHAR No: {localStorage.getItem("aadhar")}</span></Card.Title>
                     </Card.Body>
                 </Card>
             </Container>

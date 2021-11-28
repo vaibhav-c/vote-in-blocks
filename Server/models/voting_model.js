@@ -37,9 +37,16 @@ const voteSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    adminEmail: {
+        type: String,
+        required: true
+    },
+    resultsDeclared: {
+        type: Boolean,
+        required: true
+    },
     invites: [String],
     candidateDetails: [candidateSchema]
-
     
 },{ timestamps: true });
 

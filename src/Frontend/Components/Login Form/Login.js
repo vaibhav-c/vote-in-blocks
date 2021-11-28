@@ -19,30 +19,28 @@ const Login = (props) => {
         const {email,password} = values;
         e.preventDefault();
         if(email && password){
-                        axios.post(`http://localhost:5000/api/login`,{
-                            email,
-                            password
-                        }).then((res)=>{
-                            authenticate(res,()=>{
-                                setFormData({...formData,
-                                    username: '',
-                                    password: ''})
-                                    console.log(res);
-                                    console.log('Logged in');
-                            });
-                            
-                        }).catch((err)=>{
-                            
-                            setFormData({...formData,
-                                email: '',
-                                password: ''
-                                })
-                            console.log(err.response);
-                        })
-                }
-        
-        else
-        console.log('Please fill all the fields');
+            axios.post(`http://localhost:5000/api/login`,{
+                email,
+                password
+            }).then((res)=>{
+                authenticate(res,()=>{
+                    setFormData({...formData,
+                        username: '',
+                        password: ''})
+                        console.log(res);
+                        console.log('Logged in');
+                });
+                
+            }).catch((err)=>{
+                setFormData({...formData,
+                    email: '',
+                    password: ''
+                    })
+                console.log(err.response);
+            })
+        } else {
+            console.log('Please fill all the fields');
+        }
         
         }
     

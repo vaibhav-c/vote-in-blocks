@@ -53979,7 +53979,9 @@ const Login = props => {
         });
         console.log(err.response);
       });
-    } else console.log('Please fill all the fields');
+    } else {
+      console.log('Please fill all the fields');
+    }
   };
 
   const googleAuth = event => {
@@ -54233,30 +54235,30 @@ const Register = props => {
           }
 
           if (cnt === 1) {
-            /*axios.post(`http://localhost:5000/api/register`,{
-                name,
-                password,
-                dateOfBirth,
-                aadhar
-            }).then((res)=>{
-                setValues({
-                    formData: {
-                        name: '',
-                        password: '',
-                        dateOfBirth: '',
-                        aadhar: '',
-                        image: null
-                    }, 
-                    showModal: false,
-                })
-            }).catch((err)=>{
-                alert(err.response);
-                setValues({
-                    ...values, 
-                    showModal: false
-                });
-            })*/
-            alert("Good");
+            _axios.default.post(`http://localhost:5000/api/register`, {
+              name,
+              email,
+              password,
+              dateOfBirth,
+              aadhar
+            }).then(res => {
+              setValues({
+                formData: {
+                  name: '',
+                  password: '',
+                  dateOfBirth: '',
+                  aadhar: '',
+                  image: null
+                },
+                showModal: false
+              });
+            }).catch(err => {
+              alert(err.response);
+              setValues({ ...values,
+                showModal: false
+              });
+            }); //alert("Good");
+
           } else {
             alert(message);
             setValues({ ...values,
@@ -60359,7 +60361,145 @@ Carousel.propTypes = {
 };
 var _default = Carousel;
 exports.default = _default;
-},{"styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","prop-types":"../node_modules/prop-types/index.js","react":"../node_modules/react/index.js","react-swipeable":"../node_modules/react-swipeable/es/index.js","classnames":"../node_modules/classnames/index.js","resize-observer-polyfill":"../node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js","react-only-when":"../node_modules/react-only-when/dist/index.es.js"}],"Frontend/Pages/Home/Home.css":[function(require,module,exports) {
+},{"styled-components":"../node_modules/styled-components/dist/styled-components.browser.esm.js","prop-types":"../node_modules/prop-types/index.js","react":"../node_modules/react/index.js","react-swipeable":"../node_modules/react-swipeable/es/index.js","classnames":"../node_modules/classnames/index.js","resize-observer-polyfill":"../node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js","react-only-when":"../node_modules/react-only-when/dist/index.es.js"}],"../node_modules/react-jwt/dist/index.modern.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.decodeToken = decodeToken;
+exports.isExpired = isTokenExpired;
+exports.useJwt = useJwt;
+
+var _react = require("react");
+
+function decodeToken(token) {
+  try {
+    if (token.split(".").length !== 3 || typeof token !== "string") {
+      return null;
+    }
+
+    var payload = token.split(".")[1];
+    var padding = "=".repeat((4 - payload.length % 4) % 4);
+    var base64 = payload.replace("-", "+").replace("_", "/") + padding;
+    var decoded = JSON.parse(atob(base64));
+    return decoded;
+  } catch (error) {
+    return null;
+  }
+}
+
+function isTokenExpired(token) {
+  var decodedToken = decodeToken(token);
+  var result = true;
+
+  if (decodedToken && decodedToken.exp) {
+    var expirationDate = new Date(0);
+    expirationDate.setUTCSeconds(decodedToken.exp);
+    result = expirationDate.valueOf() < new Date().valueOf();
+  }
+
+  return result;
+}
+
+function useJwt(userJwt) {
+  var _useState = (0, _react.useState)(false),
+      isExpired = _useState[0],
+      setIsExpired = _useState[1];
+
+  var _useState2 = (0, _react.useState)(null),
+      decodedToken = _useState2[0],
+      setDecodedToken = _useState2[1];
+
+  (0, _react.useEffect)(function () {
+    evaluateToken(userJwt);
+  }, [userJwt]);
+
+  var evaluateToken = function evaluateToken(token) {
+    setDecodedToken(decodeToken(token));
+    setIsExpired(isTokenExpired(token));
+  };
+
+  return {
+    isExpired: isExpired,
+    decodedToken: decodedToken,
+    reEvaluateToken: evaluateToken
+  };
+}
+},{"react":"../node_modules/react/index.js"}],"Context/context.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Provider = exports.Context = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+const initialState = {
+  email: '',
+  name: '',
+  dateOfBirth: '',
+  aadhar: ''
+};
+
+const authReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_USER':
+      localStorage.setItem("email", action.payload.email);
+      localStorage.setItem("dateOfBirth", action.payload.dateOfBirth);
+      localStorage.setItem("name", action.payload.name);
+      localStorage.setItem("aadhar", action.payload.aadhar);
+      return { ...state,
+        email: action.payload.email,
+        name: action.payload.name,
+        dateOfBirth: action.payload.dateOfBirth,
+        aadhar: action.payload.aadhar
+      };
+
+    default:
+      return state;
+  }
+};
+
+const Context = (0, _react.createContext)({
+  email: '',
+  name: '',
+  dateOfBirth: '',
+  aadhar: '',
+  setUser: data => {}
+});
+exports.Context = Context;
+
+const Provider = props => {
+  const [state, dispatch] = (0, _react.useReducer)(authReducer, initialState);
+
+  const setUser = data => {
+    dispatch({
+      type: 'SET_USER',
+      payload: data
+    });
+  };
+
+  return /*#__PURE__*/_react.default.createElement(Context.Provider, _extends({
+    value: {
+      email: state.email,
+      name: state.name,
+      dateOfBirth: state.dateOfBirth,
+      aadhar: state.aadhar,
+      setUser
+    }
+  }, props));
+};
+
+exports.Provider = Provider;
+},{"react":"../node_modules/react/index.js"}],"Frontend/Pages/Home/Home.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -60372,7 +60512,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _Menubar = _interopRequireDefault(require("../../Components/Menubar/Menubar"));
 
@@ -60380,18 +60520,49 @@ var _reactBootstrap = require("react-bootstrap");
 
 var _reactElasticCarousel = _interopRequireDefault(require("react-elastic-carousel"));
 
+var _reactJwt = require("react-jwt");
+
+var _context = require("../../../Context/context");
+
 require("./Home.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 const Home = props => {
+  const context = (0, _react.useContext)(_context.Context);
+  console.log(context);
+  (0, _react.useEffect)(() => {
+    let s = window.location.href;
+
+    if (s.indexOf("?") !== -1) {
+      const token = s.split("?")[1];
+      const decoded = (0, _reactJwt.decodeToken)(token.substring(0, token.length - 1));
+      console.log(decoded); //set user
+
+      if (localStorage.getItem("email") === undefined && (0, _reactJwt.isExpired)(token.substring(0, token.length - 1))) {
+        window.location.href = "/";
+      }
+
+      context.setUser({
+        email: decoded.email,
+        dateOfBirth: decoded.dateOfBirth,
+        name: decoded.name,
+        aadhar: decoded.aadhar
+      });
+    }
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Container, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
       width: '100%',
       marginTop: '30px',
       marginBottom: '80px',
       height: '100%',
-      display: 'flex'
+      display: 'flex',
+      backgroundColor: "black"
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
     style: {
@@ -60411,7 +60582,7 @@ const Home = props => {
     style: {
       marginLeft: '20px'
     }
-  }, "Hey You"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Img, {
+  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Img, {
     variant: "top",
     style: {
       overflow: 'hidden',
@@ -60423,17 +60594,33 @@ const Home = props => {
     src: "https://images1.livehindustan.com/uploadimage/library/2021/07/02/16_9/16_9_6/aadhar_card__1625226505.jpg"
   }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
     style: {
-      marginLeft: '10px'
+      marginLeft: '10px',
+      marginBottom: '20px',
+      marginTop: '30px'
     }
-  }, "Hey You"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
+  }, /*#__PURE__*/_react.default.createElement("span", {
     style: {
-      marginLeft: '10px'
+      color: 'orange'
     }
-  }, "Hey You"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
+  }, "Email: ", localStorage.getItem("email"))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
     style: {
-      marginLeft: '10px'
+      marginLeft: '10px',
+      marginBottom: '20px'
     }
-  }, "Hey You")))), /*#__PURE__*/_react.default.createElement("div", {
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    style: {
+      color: 'white'
+    }
+  }, "Name: ", localStorage.getItem("name"))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
+    style: {
+      marginLeft: '10px',
+      marginBottom: '20px'
+    }
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    style: {
+      color: 'green'
+    }
+  }, "AADHAR No: ", localStorage.getItem("aadhar")))))), /*#__PURE__*/_react.default.createElement("div", {
     style: {
       display: 'flex',
       marginTop: '20px'
@@ -60530,7 +60717,7 @@ const Home = props => {
 
 var _default = Home;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","./Home.css":"Frontend/Pages/Home/Home.css"}],"../node_modules/uuid4/browser.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","react-jwt":"../node_modules/react-jwt/dist/index.modern.js","../../../Context/context":"Context/context.js","./Home.css":"Frontend/Pages/Home/Home.css"}],"../node_modules/uuid4/browser.js":[function(require,module,exports) {
 var define;
 (function() {
   function getBytes() {
@@ -82712,18 +82899,21 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _auth_models = require("../../../../Server/models/auth_models");
 
+var _context = require("../../../Context/context");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-const Home = props => {
-  /*const steps = [
-      {name: 'One', component: <One/>},
-      {name: 'Two', component: <Two/>},
-      {name: 'Three', component: <Three/>},
-  ];*/
+const Election = props => {
+  const context = (0, _react.useContext)(_context.Context);
+
+  if (localStorage.getItem("email") === undefined) {
+    window.location.pathname = "/";
+  }
+
   const [values, setValues] = (0, _react.useState)({
     position: 1,
     election: {
@@ -82733,7 +82923,9 @@ const Home = props => {
       endTime: '',
       candidates: 0,
       candidateDetails: [],
-      invites: []
+      invites: [],
+      resultsDeclared: false,
+      adminEmail: localStorage.getItem("email")
     }
   });
 
@@ -82885,12 +83077,13 @@ const Home = props => {
         election
       }).then(res => {
         authenticate(res, () => {
-          setFormData({});
-          console.log(res);
-          console.log('Logged in');
+          window.location.reload(); //setFormData({})
+          //    console.log(res);
+          //    console.log('Logged in');
         });
       }).catch(err => {
-        setFormData({});
+        //setFormData({})
+        window.location.reload();
         console.log(err.response);
       });
 
@@ -83078,9 +83271,9 @@ const Home = props => {
   }, "\u2192")))))));
 };
 
-var _default = Home;
+var _default = Election;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","react-file-reader":"../node_modules/react-file-reader/index.js","axios":"../node_modules/axios/index.js","../../../../Server/models/auth_models":"../Server/models/auth_models.js"}],"Frontend/Components/Result Card/Result Card.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","react-file-reader":"../node_modules/react-file-reader/index.js","axios":"../node_modules/axios/index.js","../../../../Server/models/auth_models":"../Server/models/auth_models.js","../../../Context/context":"Context/context.js"}],"Frontend/Components/Result Card/Result Card.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -83403,6 +83596,8 @@ var _axios = _interopRequireDefault(require("axios"));
 
 var _Modal = _interopRequireDefault(require("../../Modal/Modal"));
 
+var _context = require("../../../Context/context");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -83410,16 +83605,32 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const Details = props => {
+  const context = (0, _react.useContext)(_context.Context);
   const [values, setValues] = (0, _react.useState)({
     formData: {
       name: '',
       password: '',
+      email: '',
       dateOfBirth: '',
       aadhar: '',
       image: null
     },
     showModal: false
   });
+  (0, _react.useEffect)(() => {
+    let s = window.location.href;
+
+    if (s.indexOf('?') === -1) {
+      window.location.replace('/');
+    }
+
+    let temp = values.formData;
+    let s1 = window.location.href.split("?")[1];
+    temp.email = s1.substring(0, s1.length - 1);
+    setValues({ ...values,
+      formData: temp
+    });
+  }, []);
   const {
     name,
     email,
@@ -83528,30 +83739,39 @@ const Details = props => {
           }
 
           if (cnt === 1) {
-            /*axios.post(`http://localhost:5000/api/register`,{
-                name,
-                password,
-                dateOfBirth,
-                aadhar
-            }).then((res)=>{
-                setValues({
-                    formData: {
-                        name: '',
-                        password: '',
-                        dateOfBirth: '',
-                        aadhar: '',
-                        image: null
-                    }, 
-                    showModal: false
-                })
-            }).catch((err)=>{
-                alert(err.response);
-                setValues({
-                    ...values, 
-                    showModal: false
-                });
-            })*/
-            alert("Good");
+            _axios.default.post(`http://localhost:5000/api/register`, {
+              name,
+              email,
+              password,
+              dateOfBirth,
+              aadhar
+            }).then(res => {
+              window.location.pathname = "/home"; //set user
+
+              context.setUser({
+                email: values.email,
+                dateOfBirth: values.dateOfBirth,
+                name: values.name,
+                aadhar: values.aadhar
+              });
+              setValues({
+                formData: {
+                  name: '',
+                  password: '',
+                  email: '',
+                  dateOfBirth: '',
+                  aadhar: '',
+                  image: null
+                },
+                showModal: false
+              });
+            }).catch(err => {
+              alert(err.response);
+              setValues({ ...values,
+                showModal: false
+              });
+            }); //alert("Good");
+
           } else {
             alert(message);
             setValues({ ...values,
@@ -83649,111 +83869,7 @@ const Details = props => {
 
 var _default = Details;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../Modal/Modal":"Frontend/Modal/Modal.js"}],"Context/context.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Provider = exports.Context = void 0;
-
-var _react = _interopRequireWildcard(require("react"));
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-const initialState = {
-  loggedInEmail: ''
-};
-
-const authReducer = (state, action) => {
-  switch (action.type) {
-    case 'SET':
-      localStorage.setItem("day", action.payload.day);
-      return { ...state,
-        day: action.payload.day
-      };
-
-    case 'SET_CITY':
-      localStorage.setItem("city", action.payload.city);
-      localStorage.setItem("longitude", action.payload.longitude);
-      localStorage.setItem("latitude", action.payload.latitude);
-      localStorage.setItem("country", action.payload.country);
-      return { ...state,
-        city: action.payload.city,
-        country: action.payload.country,
-        latitude: action.payload.latitude,
-        longitude: action.payload.longitude
-      };
-
-    case 'SET_TIMEZONE':
-      localStorage.setItem("timezone", action.payload.timezone);
-      return { ...state,
-        timezone: action.payload.timezone
-      };
-
-    default:
-      return state;
-  }
-};
-
-const Context = (0, _react.createContext)({
-  day: true,
-  city: '',
-  latitude: '',
-  longitude: '',
-  country: '',
-  timezone: '',
-  setTimeZone: data => {},
-  setWeatherCity: data => {},
-  setWeather: data => {}
-});
-exports.Context = Context;
-
-const Provider = props => {
-  const [state, dispatch] = (0, _react.useReducer)(authReducer, initialState);
-
-  const setWeather = data => {
-    dispatch({
-      type: 'SET',
-      payload: data
-    });
-  };
-
-  const setWeatherCity = data => {
-    dispatch({
-      type: 'SET_CITY',
-      payload: data
-    });
-  };
-
-  const setTimeZone = data => {
-    dispatch({
-      type: 'SET_TIMEZONE',
-      payload: data
-    });
-  };
-
-  return /*#__PURE__*/_react.default.createElement(Context.Provider, _extends({
-    value: {
-      day: state.day,
-      country: state.country,
-      city: state.city,
-      latitude: state.latitude,
-      longitude: state.longitude,
-      timezone: state.timezone,
-      setTimeZone,
-      setWeatherCity,
-      setWeather
-    }
-  }, props));
-};
-
-exports.Provider = Provider;
-},{"react":"../node_modules/react/index.js"}],"../node_modules/prefix-style/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../Modal/Modal":"Frontend/Modal/Modal.js","../../../Context/context":"Context/context.js"}],"../node_modules/prefix-style/index.js":[function(require,module,exports) {
 var div = null
 var prefixes = [ 'Webkit', 'Moz', 'O', 'ms' ]
 
@@ -85273,7 +85389,7 @@ ShadowScrollbars.propTypes = {
 var _default = ShadowScrollbars;
 exports.default = _default;
 },{"dom-css":"../node_modules/dom-css/index.js","react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","react-custom-scrollbars":"../node_modules/react-custom-scrollbars/lib/index.js"}],"config.js":[function(require,module,exports) {
-const CONTRACT_NAME = "dev-1637917060972-55779173519568" || 'VotingApp';
+const CONTRACT_NAME = "dev-1637858210795-43305915824310" || 'VotingApp';
 const server = undefined || 'http://localhost:5000';
 
 function getConfig(env) {
@@ -85314,7 +85430,7 @@ function getConfig(env) {
       return {
         networkId: 'local',
         nodeUrl: 'http://localhost:3030',
-        keyPath: `${"C:\\Users\\nanda"}/.near/validator_key.json`,
+        keyPath: `${"C:\\Users\\Lenovo"}/.near/validator_key.json`,
         walletUrl: 'http://localhost:4000/wallet',
         contractName: CONTRACT_NAME
       };
@@ -101531,7 +101647,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62177" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59871" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
