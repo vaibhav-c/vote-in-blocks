@@ -149,4 +149,58 @@ router.post('/voting',async(req,res)=>{
     })
 })
 
+router.get('/conducted',async(req,res)=>{
+    const {email} = req.body
+    let Found = await Vote.find({
+        adminEmail: email
+    })
+
+    if(Found)
+        return res.json({
+            success: true,
+            conducted: Found
+        })
+    else
+        return res.json({
+            success: false
+        })
+    
+})
+
+
+router.get('/votingelection',async(req,res)=>{
+    const { email } = req.body
+    let Found = await Vote.find({
+        invites: email
+    })
+
+    if(Found)
+        return res.json({
+            success: true,
+            conducted: Found
+        })
+    else
+        return res.json({
+            success: false
+        })
+})
+
+router.put('/update',async(req,res)=>{
+    const { ID } = req.body
+    let Found = await Vote.findOneAndUpdate({
+        _id: ID
+    },{resultsDeclared: true},{new:true})
+
+    if(Found)
+        return res.json({
+            success: true,
+            conducted: Found
+        })
+    else
+        return res.json({
+            success: false
+    })
+})
+
+
 module.exports = router;
