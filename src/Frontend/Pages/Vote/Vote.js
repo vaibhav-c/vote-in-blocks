@@ -3,6 +3,8 @@ import Menubar from '../../Components/Menubar/Menubar';
 import {Tab, Row, Col, Card} from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
 import VoteCard from '../../Components/Vote Card/Vote Card';
+import { login, logout } from "../../../utils";
+
 
 const Vote = (props) => {
 
@@ -36,6 +38,13 @@ const Vote = (props) => {
             }
         ]
     })
+
+    if(window.accountId === '') {
+        console.log("login");
+        login()
+    }
+
+    
     return (
         <>
             <Menubar/>

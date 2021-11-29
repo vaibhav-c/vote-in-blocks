@@ -6,6 +6,15 @@ import ResultsCard from '../../Components/Result Card/Result Card';
 
 const Results = (props) => {
 
+    if(localStorage.getItem("email") === undefined) {
+        window.location.pathname = "/";
+    } else {
+        if(window.accountId === '') {
+            console.log("login");
+            login()
+        }
+    }
+
     const [values, setValues] = useState({
         electionList: [
             {

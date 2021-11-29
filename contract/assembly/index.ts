@@ -12,9 +12,11 @@
  *
  */
 
-import { Context, logging, storage } from 'near-sdk-as'
+import { Context, logging, storage, PersistentUnorderedMap } from 'near-sdk-as'
 
 const DEFAULT_MESSAGE = 'Hello'
+let elections = new PersistentUnorderedMap<string, PersistentUnorderedMap<string, u64>>("electionPerCandidateVotes");
+let voted = new PersistentUnorderedMap<string, PersistentUnorderedMap<string, i32>>("userVotedElection");
 
 // Exported functions will be part of the public interface for your smart contract.
 // Feel free to extract behavior to non-exported functions!
@@ -31,4 +33,45 @@ export function setGreeting(message: string): void {
   // Use logging.log to record logs permanently to the blockchain!
   logging.log(`Saving greeting "${message}" for account "${accountId}"`)
   storage.set(accountId, message)
+}
+
+export function setUpElection(electionId: string, candidateIds:string[]):void{
+  let candidates = new PersistentUnorderedMap<string, u64>("candidates");
+  for(let i = 0; i < candidateIds.length; i++) {
+    candidates.set(candidateIds[i], 0);
+  }
+  elections.set(electionId, candidates);
+}
+
+export function sendVote(electionId: string, candidateId:string, userId: string):void{
+  if(elections.contains(electionId)) {
+    let candidateToVote = elections.getSome(electionId);
+    if(candidateToVote.contains(candidateId)) {
+      let votesCurrent = candidateToVote.getSome(candidateId);
+      if(voted.contains(userId)) {
+        let userVoted = voted.getSome(userId);
+        if(userVoted.contains(electionId)) {
+          logging.log("Already Voted");
+        } else {
+          let tick: i32 = 1;
+          candidateToVote.set(candidateId, votesCurrent + tick);
+          elections.set(electionId, candidateToVote);
+          let electionsVoted = new PersistentUnorderedMap<string, i32>("votedHere");
+          electionsVoted.set(electionId, 1);
+          voted.set(userId, electionsVoted);
+        }
+      } else {
+        let newVoter = new PersistentUnorderedMap<string, i32>("newvoter");
+        newVoter.set(electionId, 1);
+        voted.set(userId, newVoter);
+        let tick: i32 = 1;
+        candidateToVote.set(candidateId, votesCurrent + tick);
+        elections.set(electionId, candidateToVote);
+      }
+    } else {
+      logging.log("Candidate DNE");
+    }
+  } else {
+    logging.log("Election DNE");
+  }
 }

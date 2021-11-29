@@ -6,6 +6,15 @@ import ConductedCard from '../../Components/Conducted Card/Conducted Card';
 
 const Vote = (props) => {
 
+    if(localStorage.getItem("email") === undefined) {
+        window.location.pathname = "/";
+    } else {
+        if(window.accountId === '') {
+            console.log("login");
+            login()
+        }
+    }
+
     const [values, setValues] = useState({
         electionList: [
             {

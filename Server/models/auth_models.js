@@ -26,8 +26,7 @@ const userSchema = mongoose.Schema({
     aadhar:{
         type: String,
         required: true
-    },
-
+    }
     
 },{ timestamps: true });
 

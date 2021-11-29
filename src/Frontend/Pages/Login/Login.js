@@ -6,6 +6,11 @@ import Login from '../../Components/Login Form/Login';
 import Register from '../../Components/Register Form/Register';
 
 const LoginPage = (props) => {
+
+    if(localStorage.getItem("email") === undefined) {
+        window.location.replace("/home"); 
+    }
+
     return (
         <div className="containerx register">
             <div className="row">

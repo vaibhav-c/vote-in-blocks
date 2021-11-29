@@ -13,7 +13,13 @@ const Election = (props) => {
     
     if(localStorage.getItem("email") === undefined) {
         window.location.pathname = "/";
+    } else {
+        if(window.accountId === '') {
+            console.log("login");
+            login()
+        }
     }
+
     const [values, setValues] = useState({
         position: 1,
         election: {
