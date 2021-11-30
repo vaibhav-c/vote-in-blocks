@@ -85,16 +85,16 @@ router.post('/login',async (req,res)=>{
     })
     if(foundemail){
             if(foundemail.password === password){
-                const token = jwt.sign({ _id: foundemail._id},process.env.SECRET,{expiresIn: '7d'});
-                const {email,name} = foundemail;
+                const token = jwt.sign({
+                    name: foundemail.name,
+                    email: foundemail.email,
+                    aadhar: foundemail.aadhar,
+                    dateOfBirth: foundemail.dateOfBirth
+                }, process.env.SECRET, {expiresIn: 50000});
                 console.log("Found");
+                console.log(token);
                 return res.json({
-                    token,
-                    user:{
-                        name,
-                        email
-                    }
-                    
+                    token
                 })
             }
             else{
@@ -150,11 +150,10 @@ router.post('/voting',async(req,res)=>{
 })
 
 router.get('/conducted',async(req,res)=>{
-    const {email} = req.body
+    const {email} = req.query
     let Found = await Vote.find({
-        adminEmail: email
+        adminEmail : email
     })
-
     if(Found)
         return res.json({
             success: true,
@@ -169,7 +168,7 @@ router.get('/conducted',async(req,res)=>{
 
 
 router.get('/votingelection',async(req,res)=>{
-    const { email } = req.body
+    const { email } = req.query
     let Found = await Vote.find({
         invites: email
     })

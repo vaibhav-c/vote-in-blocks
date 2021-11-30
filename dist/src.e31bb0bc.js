@@ -68073,9 +68073,9 @@ async function initContract() {
 
   window.contract = await new _nearApiJs.Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['getGreeting'],
+    viewMethods: ['getGreeting', 'getResults'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['setGreeting', 'sendVote']
+    changeMethods: ['setGreeting', 'sendVote', 'setUpElection']
   });
 }
 
@@ -68092,114 +68092,7 @@ function login() {
   // the private key in localStorage.
   window.walletConnection.requestSignIn(nearConfig.contractName);
 }
-},{"near-api-js":"../node_modules/near-api-js/lib/browser-index.js","./config":"config.js"}],"Frontend/Pages/Vote/Vote.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireWildcard(require("react"));
-
-var _Menubar = _interopRequireDefault(require("../../Components/Menubar/Menubar"));
-
-var _reactBootstrap = require("react-bootstrap");
-
-var _ListGroup = _interopRequireDefault(require("react-bootstrap/ListGroup"));
-
-var _VoteCard = _interopRequireDefault(require("../../Components/Vote Card/Vote Card"));
-
-var _utils = require("../../../utils");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-const Vote = props => {
-  const [values, setValues] = (0, _react.useState)({
-    electionList: [{
-      'name': 'Vaibhav',
-      'candidates': [{
-        'name': 'BJP',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/e/e8/BJP_election_symbol.png'
-      }, {
-        'name': 'CON',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-      }, {
-        'name': 'SP',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/6/65/Samajwadi_Party_Flag.jpg'
-      }]
-    }, {
-      'name': 'Vaibhav1',
-      'candidates': [{
-        'name': 'abc',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-      }]
-    }]
-  });
-
-  if (window.accountId === '') {
-    console.log("login");
-    (0, _utils.login)();
-  }
-
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Container, {
-    id: "list-group-tabs-example",
-    defaultActiveKey: "#linkinit"
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
-    style: {
-      marginTop: '20px'
-    }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
-    sm: 4
-  }, /*#__PURE__*/_react.default.createElement(_ListGroup.default, null, values.electionList.map(election => {
-    return /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
-      key: election.name,
-      action: true,
-      href: "#" + election.name
-    }, election.name);
-  }))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
-    sm: 8
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Content, null, values.electionList.map(election => {
-    return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
-      key: election.name,
-      eventKey: "#" + election.name
-    }, election.candidates.map(candidate => {
-      return /*#__PURE__*/_react.default.createElement(_VoteCard.default, {
-        name: candidate.name,
-        url: candidate.url,
-        candidateID: "ppp"
-      });
-    }));
-  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
-    eventKey: "#linkinit"
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
-    style: {
-      width: '100%'
-    }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
-    style: {
-      display: 'flex',
-      width: '100%'
-    }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
-    style: {
-      marginLeft: '20px'
-    }
-  }, "Select from the list of ongoing elections and click on the Vote Button to Vote.")))))))));
-};
-
-var _default = Vote;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","../../Components/Vote Card/Vote Card":"Frontend/Components/Vote Card/Vote Card.js","../../../utils":"utils.js"}],"Frontend/Pages/Login/Login.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+},{"near-api-js":"../node_modules/near-api-js/lib/browser-index.js","./config":"config.js"}],"../node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -70086,7 +69979,175 @@ module.exports.default = axios;
 
 },{"./utils":"../node_modules/axios/lib/utils.js","./helpers/bind":"../node_modules/axios/lib/helpers/bind.js","./core/Axios":"../node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"../node_modules/axios/lib/core/mergeConfig.js","./defaults":"../node_modules/axios/lib/defaults.js","./cancel/Cancel":"../node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"../node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"../node_modules/axios/lib/cancel/isCancel.js","./env/data":"../node_modules/axios/lib/env/data.js","./helpers/spread":"../node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"../node_modules/axios/lib/helpers/isAxiosError.js"}],"../node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"Frontend/Components/Login Form/Login.css":[function(require,module,exports) {
+},{"./lib/axios":"../node_modules/axios/lib/axios.js"}],"Frontend/Pages/Vote/Vote.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+var _Menubar = _interopRequireDefault(require("../../Components/Menubar/Menubar"));
+
+var _reactBootstrap = require("react-bootstrap");
+
+var _ListGroup = _interopRequireDefault(require("react-bootstrap/ListGroup"));
+
+var _VoteCard = _interopRequireDefault(require("../../Components/Vote Card/Vote Card"));
+
+var _utils = require("../../../utils");
+
+var _axios = _interopRequireDefault(require("axios"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+const Vote = props => {
+  const [values, setValues] = (0, _react.useState)({
+    electionList: []
+  });
+
+  if (window.accountId === '') {
+    console.log("login");
+    (0, _utils.login)();
+  }
+
+  let email = localStorage.getItem("email");
+  (0, _react.useEffect)(() => {
+    _axios.default.get(`http://localhost:5000/api/votingelection`, {
+      params: {
+        email: email
+      }
+    }).then(res => {
+      if (res.data.success) {
+        setValues({ ...values,
+          electionList: res.data.conducted
+        });
+        console.log(res.data.conducted);
+      } else {
+        alert('Some Error Occurred');
+      }
+    }).catch(err => {
+      console.log(err.response);
+    });
+  }, []);
+  let fetched;
+  let fetchedCandidates;
+  let currentTime = new Date().toISOString();
+  let n = 0;
+
+  if (Object.keys(values.electionList).length !== 0) {
+    fetchedCandidates = values.electionList.map(election => {
+      if (currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1) {
+        return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+          key: election.name,
+          eventKey: "#" + election.name
+        }, election.candidateDetails.map(candidate => {
+          return /*#__PURE__*/_react.default.createElement(_VoteCard.default, {
+            name: candidate.name,
+            url: candidate.url,
+            number: candidate.number,
+            candidateID: "ppp"
+          });
+        }));
+      }
+    });
+    fetched = values.electionList.map(election => {
+      if (currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1) {
+        n++;
+        return /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
+          key: election.name,
+          action: true,
+          href: "#" + election.name
+        }, election.name);
+      }
+    });
+  } else {
+    fetched = /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
+      key: "none",
+      action: true,
+      href: "#none"
+    }, "Nothing to Show");
+    fetchedCandidates = /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+      key: "none",
+      eventKey: "#none"
+    }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
+      style: {
+        width: '100%',
+        backgroundColor: "white"
+      }
+    }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
+      style: {
+        display: 'flex',
+        width: '100%'
+      }
+    }, "You haven't been invited to vote in any elections")));
+  }
+
+  if (n === 0) {
+    fetched = /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
+      key: "none",
+      action: true,
+      href: "#none"
+    }, "Nothing to Show");
+    fetchedCandidates = /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+      key: "none",
+      eventKey: "#none"
+    }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
+      style: {
+        width: '100%',
+        backgroundColor: "white"
+      }
+    }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
+      style: {
+        display: 'flex',
+        width: '100%'
+      }
+    }, "You haven't been invited to vote in any elections")));
+  }
+
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Container, {
+    id: "list-group-tabs-example",
+    defaultActiveKey: "#linkinit"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Row, {
+    style: {
+      marginTop: '20px'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
+    sm: 4
+  }, /*#__PURE__*/_react.default.createElement(_ListGroup.default, null, fetched)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
+    sm: 8
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Content, null, fetchedCandidates, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+    eventKey: "#linkinit"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
+    style: {
+      width: '100%'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
+    style: {
+      display: 'flex',
+      width: '100%'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
+    style: {
+      marginLeft: '20px'
+    }
+  }, "Select from the list of ongoing elections and click on the Vote Button to Vote.")))))))));
+};
+
+var _default = Vote;
+exports.default = _default;
+},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","../../Components/Vote Card/Vote Card":"Frontend/Components/Vote Card/Vote Card.js","../../../utils":"utils.js","axios":"../node_modules/axios/index.js"}],"Frontend/Pages/Login/Login.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"Frontend/Components/Login Form/Login.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -70100,8 +70161,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
-
-var _Login = _interopRequireDefault(require("../../Pages/Login/Login"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
@@ -70137,23 +70196,18 @@ const Login = props => {
         email,
         password
       }).then(res => {
-        authenticate(res, () => {
-          setFormData({ ...formData,
-            username: '',
-            password: ''
-          });
-          console.log(res);
-          console.log('Logged in');
-        });
-      }).catch(err => {
-        setFormData({ ...formData,
+        setValues({ ...values,
           email: '',
           password: ''
         });
-        console.log(err.response);
+        window.location.href = `/home?${res.data.token}`;
+        console.log('Logged in');
+      }).catch(err => {
+        console.log(err);
+        alert(err.response.data.error);
       });
     } else {
-      console.log('Please fill all the fields');
+      alert('Please fill all the fields');
     }
   };
 
@@ -70183,7 +70237,7 @@ const Login = props => {
     placeholder: "name@example.com",
     onChange: onChangeHandler('email')
   }), /*#__PURE__*/_react.default.createElement("label", {
-    for: "floatingInput"
+    htmlFor: "floatingInput"
   }, "Email address")), /*#__PURE__*/_react.default.createElement("div", {
     className: "form-floating mb-3"
   }, /*#__PURE__*/_react.default.createElement("input", {
@@ -70193,7 +70247,7 @@ const Login = props => {
     placeholder: "Password",
     onChange: onChangeHandler('password')
   }), /*#__PURE__*/_react.default.createElement("label", {
-    for: "floatingPassword"
+    htmlFor: "floatingPassword"
   }, "Password")), /*#__PURE__*/_react.default.createElement("div", {
     className: "form-check mb-3"
   }, /*#__PURE__*/_react.default.createElement("input", {
@@ -70203,7 +70257,7 @@ const Login = props => {
     id: "rememberPasswordCheck"
   }), /*#__PURE__*/_react.default.createElement("label", {
     className: "form-check-label",
-    for: "rememberPasswordCheck"
+    htmlFor: "rememberPasswordCheck"
   }, "Remember password")), /*#__PURE__*/_react.default.createElement("div", {
     className: "d-grid"
   }, /*#__PURE__*/_react.default.createElement("button", {
@@ -70225,7 +70279,7 @@ const Login = props => {
 
 var _default = Login;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Pages/Login/Login":"Frontend/Pages/Login/Login.js","axios":"../node_modules/axios/index.js","./Login.css":"Frontend/Components/Login Form/Login.css"}],"Frontend/Components/Register Form/Register.css":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","./Login.css":"Frontend/Components/Login Form/Login.css"}],"Frontend/Components/Register Form/Register.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -70426,7 +70480,7 @@ const Register = props => {
                 showModal: false
               });
             }).catch(err => {
-              alert(err.response);
+              alert(err.response.data.error);
               setValues({ ...values,
                 showModal: false
               });
@@ -76711,14 +76765,13 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 const Home = props => {
   const context = (0, _react.useContext)(_context.Context);
-  console.log(context);
   (0, _react.useEffect)(() => {
     let s = window.location.href;
 
     if (s.indexOf("?") !== -1) {
       const token = s.split("?")[1];
-      const decoded = (0, _reactJwt.decodeToken)(token.substring(0, token.length - 1));
-      console.log(decoded); //set user
+      const decoded = (0, _reactJwt.decodeToken)(token.substring(0, token.length - 1)); //console.log(decoded);
+      //set user
 
       if (localStorage.getItem("email") === undefined && (0, _reactJwt.isExpired)(token.substring(0, token.length - 1))) {
         window.location.href = "/";
@@ -76732,6 +76785,10 @@ const Home = props => {
       });
     }
   }, []);
+  let ongoingElection = 0;
+  let votedElection = 0;
+  let electionConducted = 0;
+  (0, _react.useEffect)(() => {}, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Container, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
       width: '100%',
@@ -76803,7 +76860,7 @@ const Home = props => {
       marginTop: '20px'
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
-    class: "col"
+    className: "col"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
       width: '18rem',
@@ -76817,24 +76874,24 @@ const Home = props => {
       color: 'wheat'
     }
   }, "Organizer"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "You have conducted these elections using the app.")), /*#__PURE__*/_react.default.createElement("div", {
-    class: "numbers"
+    className: "numbers"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--1",
+    className: "numbers__window__digit numbers__window__digit--1",
     "data-fake": "8642519073"
-  }, "9")), /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+  }, electionConducted / 100)), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--2",
+    className: "numbers__window__digit numbers__window__digit--2",
     "data-fake": "5207186394"
-  }, "1")), /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+  }, electionConducted % 100 / 10)), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--3",
+    className: "numbers__window__digit numbers__window__digit--3",
     "data-fake": "8395216407"
-  }, "5"))))), /*#__PURE__*/_react.default.createElement("div", {
-    class: "col"
+  }, electionConducted % 10))))), /*#__PURE__*/_react.default.createElement("div", {
+    className: "col"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
       width: '18rem',
@@ -76845,24 +76902,24 @@ const Home = props => {
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Elections Voted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
     className: "mb-2 text-muted"
   }, "You've Voted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "You have voted in these elections. You can't vote again.")), /*#__PURE__*/_react.default.createElement("div", {
-    class: "numbers"
+    className: "numbers"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--1",
+    className: "numbers__window__digit numbers__window__digit--1",
     "data-fake": "8642519073"
-  }, "5")), /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+  }, votedElection / 100)), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--2",
+    className: "numbers__window__digit numbers__window__digit--2",
     "data-fake": "5207186394"
-  }, "5")), /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+  }, votedElection % 100 / 10)), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--3",
+    className: "numbers__window__digit numbers__window__digit--3",
     "data-fake": "8395216407"
-  }, "7"))))), /*#__PURE__*/_react.default.createElement("div", {
-    class: "col"
+  }, votedElection % 10))))), /*#__PURE__*/_react.default.createElement("div", {
+    className: "col"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
       width: '18rem',
@@ -76873,23 +76930,23 @@ const Home = props => {
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Ongoing Elections"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
     className: "mb-2 text-muted"
   }, "You're Invited"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Vote in the given elections where you are invited to vote.")), /*#__PURE__*/_react.default.createElement("div", {
-    class: "numbers"
+    className: "numbers"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--1",
+    className: "numbers__window__digit numbers__window__digit--1",
     "data-fake": "8642519073"
-  }, "8")), /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+  }, ongoingElection / 100)), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--2",
+    className: "numbers__window__digit numbers__window__digit--2",
     "data-fake": "5207186394"
-  }, "5")), /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window"
+  }, ongoingElection % 100 / 10)), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
   }, /*#__PURE__*/_react.default.createElement("span", {
-    class: "numbers__window__digit numbers__window__digit--3",
+    className: "numbers__window__digit numbers__window__digit--3",
     "data-fake": "8395216407"
-  }, "2")))))), /*#__PURE__*/_react.default.createElement("br", null));
+  }, ongoingElection % 10)))))), /*#__PURE__*/_react.default.createElement("br", null));
 };
 
 var _default = Home;
@@ -99036,8 +99093,7 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
-    unique: true
+    trim: true
   },
   password: {
     type: String,
@@ -99048,7 +99104,8 @@ const userSchema = mongoose.Schema({
   },
   aadhar: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   }
 }, {
   timestamps: true
@@ -99518,6 +99575,8 @@ var _ListGroup = _interopRequireDefault(require("react-bootstrap/ListGroup"));
 
 var _ResultCard = _interopRequireDefault(require("../../Components/Result Card/Result Card"));
 
+var _axios = _interopRequireDefault(require("axios"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -99534,31 +99593,61 @@ const Results = props => {
     }
   }
 
+  let email = localStorage.getItem("email");
   const [values, setValues] = (0, _react.useState)({
-    electionList: [{
-      'name': 'Vaibhav',
-      'candidates': [{
-        'name': 'BJP',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/e/e8/BJP_election_symbol.png',
-        'number': 70
-      }, {
-        'name': 'CON',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png',
-        'number': 20
-      }, {
-        'name': 'SP',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/6/65/Samajwadi_Party_Flag.jpg',
-        'number': 50
-      }]
-    }, {
-      'name': 'Vaibhav1',
-      'candidates': [{
-        'name': 'abc',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png',
-        'number': 20
-      }]
-    }]
+    electionList: []
   });
+  (0, _react.useEffect)(() => {
+    _axios.default.get(`http://localhost:5000/api/votingelection`, {
+      params: {
+        email: email
+      }
+    }).then(res => {
+      if (res.data.success) {
+        setValues({ ...values,
+          electionList: res.data.conducted
+        });
+        console.log(res.data.conducted);
+      } else {
+        alert('Some Error Occurred');
+      }
+    }).catch(err => {
+      console.log(err.response);
+    });
+  }, []);
+  let fetched;
+  let fetchedCandidates;
+
+  if (Object.keys(values.electionList).length !== 0) {
+    fetchedCandidates = values.electionList.map(election => {
+      if (election.resultsDeclared) {
+        return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+          key: election.name,
+          eventKey: "#" + election.name
+        }, election.candidateDetails.map(candidate => {
+          return /*#__PURE__*/_react.default.createElement(_ResultCard.default, {
+            name: candidate.name,
+            url: candidate.url,
+            number: candidate.number,
+            candidateID: "ppp"
+          });
+        }));
+      }
+    });
+    fetched = values.electionList.map(election => {
+      if (election.resultsDeclared) {
+        return /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
+          key: election.name,
+          action: true,
+          href: "#" + election.name
+        }, election.name);
+      }
+    });
+  } else {
+    fetched = /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null);
+    fetchedCandidates = /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null);
+  }
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Container, {
     id: "list-group-tabs-example",
     defaultActiveKey: "#linkinit"
@@ -99568,27 +99657,9 @@ const Results = props => {
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
     sm: 4
-  }, /*#__PURE__*/_react.default.createElement(_ListGroup.default, null, values.electionList.map(election => {
-    return /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
-      key: election.name,
-      action: true,
-      href: "#" + election.name
-    }, election.name);
-  }))), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
+  }, /*#__PURE__*/_react.default.createElement(_ListGroup.default, null, fetched)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
     sm: 8
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Content, null, values.electionList.map(election => {
-    return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
-      key: election.name,
-      eventKey: "#" + election.name
-    }, election.candidates.map(candidate => {
-      return /*#__PURE__*/_react.default.createElement(_ResultCard.default, {
-        name: candidate.name,
-        url: candidate.url,
-        number: candidate.number,
-        candidateID: "ppp"
-      });
-    }));
-  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Content, null, fetchedCandidates, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
     eventKey: "#linkinit"
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
@@ -99608,7 +99679,7 @@ const Results = props => {
 
 var _default = Results;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","../../Components/Result Card/Result Card":"Frontend/Components/Result Card/Result Card.js"}],"Frontend/Components/Conducted Card/Conducted Card.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","../../Components/Result Card/Result Card":"Frontend/Components/Result Card/Result Card.js","axios":"../node_modules/axios/index.js"}],"Frontend/Components/Conducted Card/Conducted Card.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -99652,20 +99723,20 @@ const Conducted = props => {
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "success",
-    disabled: props.status === "Ongoing" || props.declared ? true : false,
+    disabled: props.status === "Ongoing" || props.status === "Not Started" || props.declared ? true : false,
     style: {
       marginRight: '20px'
     },
     onClick: showResult
   }, "Show Results"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "success",
-    disabled: props.status === "Ongoing" || props.declared ? true : false,
+    disabled: props.status === "Ongoing" || props.status === "Not Started" || props.declared ? true : false,
     style: {
       marginRight: '20px'
     },
     onClick: declareResult
   }, "Delcare Results"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
-    variant: props.status === "Ongoing" ? "warning" : "danger",
+    variant: props.status === "Ongoing" ? "warning" : props.status === "Not Started" ? "secondary" : "danger",
     style: {
       marginRight: '20px',
       width: '100px'
@@ -99676,13 +99747,14 @@ const Conducted = props => {
       marginRight: '20px',
       width: '200px'
     }
-  }, "Start Time"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+  }, props.startTime.split("T")[0] + " " + props.startTime.split("T")[1].substring(0, 5)), "To", /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "outline-primary",
     style: {
       marginRight: '20px',
+      marginLeft: '20px',
       width: '200px'
     }
-  }, "End Time"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
+  }, props.endTime.split("T")[0] + " " + props.endTime.split("T")[1].substring(0, 5)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
     style: {
       marginLeft: '20px'
     }
@@ -99712,6 +99784,8 @@ var _reactBootstrap = require("react-bootstrap");
 
 var _ListGroup = _interopRequireDefault(require("react-bootstrap/ListGroup"));
 
+var _axios = _interopRequireDefault(require("axios"));
+
 var _ConductedCard = _interopRequireDefault(require("../../Components/Conducted Card/Conducted Card"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -99731,30 +99805,59 @@ const Vote = props => {
   }
 
   const [values, setValues] = (0, _react.useState)({
-    electionList: [{
-      'name': 'Vaibhav',
-      'status': 'Ongoing',
-      'declared': false,
-      'candidates': [{
-        'name': 'BJP',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/e/e8/BJP_election_symbol.png'
-      }, {
-        'name': 'CON',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-      }, {
-        'name': 'SP',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/6/65/Samajwadi_Party_Flag.jpg'
-      }]
-    }, {
-      'name': 'Vaibhav1',
-      'status': 'Finished',
-      'declared': true,
-      'candidates': [{
-        'name': 'abc',
-        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-      }]
-    }]
+    electionList: []
   });
+  let email = localStorage.getItem("email");
+  (0, _react.useEffect)(() => {
+    _axios.default.get(`http://localhost:5000/api/conducted`, {
+      params: {
+        email: email
+      }
+    }).then(res => {
+      if (res.data.success) {
+        setValues({ ...values,
+          electionList: res.data.conducted
+        });
+      } else {
+        alert('Some Error Occurred');
+      }
+    }).catch(err => {
+      console.log(err.response);
+    });
+  }, []);
+  let currentTime = new Date().toISOString();
+
+  if (Object.keys(values.electionList).length > 0) {
+    let startDate = values.electionList[0].startTime.split("T")[0] + " " + values.electionList[0].startTime.split("T")[1].substring(0, 5);
+    let endDate = values.electionList[0].endTime.split("T")[0] + " " + values.electionList[0].endTime.split("T")[1].substring(0, 5);
+    let current = currentTime.split("T")[0] + " " + currentTime.split("T")[1].substring(0, 5);
+    console.log(startDate, " ", endDate, " ", current, " ", startDate > current);
+  }
+
+  let fetched;
+
+  if (Object.keys(values.electionList).length !== 0) {
+    console.log(values.electionList);
+    fetched = values.electionList.map(election => {
+      let status = currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1 ? "Ongoing" : currentTime.localeCompare(election.startTime) === -1 ? "Not Started" : "Finished";
+      return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+        style: {
+          marginBottom: '15px'
+        },
+        key: election.id,
+        eventKey: "#"
+      }, /*#__PURE__*/_react.default.createElement(_ConductedCard.default, {
+        name: election.name,
+        declared: election.declared,
+        status: status,
+        startTime: election.startTime,
+        endTime: election.endTime
+      }));
+    });
+  } else {
+    fetched = /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, "No Elections Conducted");
+  }
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Container, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Container, {
     id: "list-group-tabs-example",
     defaultActiveKey: "#"
@@ -99764,25 +99867,12 @@ const Vote = props => {
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
     sm: 12
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Content, null, values.electionList.map(election => {
-    return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
-      style: {
-        marginBottom: '15px'
-      },
-      key: election.name,
-      eventKey: "#"
-    }, /*#__PURE__*/_react.default.createElement(_ConductedCard.default, {
-      name: election.name,
-      declared: props.declared,
-      candidateID: "ppp",
-      status: election.status
-    }));
-  })))))));
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Content, null, fetched))))));
 };
 
 var _default = Vote;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","../../Components/Conducted Card/Conducted Card":"Frontend/Components/Conducted Card/Conducted Card.js"}],"Frontend/Pages/Details/Details.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","axios":"../node_modules/axios/index.js","../../Components/Conducted Card/Conducted Card":"Frontend/Components/Conducted Card/Conducted Card.js"}],"Frontend/Pages/Details/Details.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -99966,7 +100056,7 @@ const Details = props => {
                 showModal: false
               });
             }).catch(err => {
-              alert(err.response);
+              alert(err.response.data.error);
               setValues({ ...values,
                 showModal: false
               });
@@ -101714,7 +101804,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53237" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53121" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

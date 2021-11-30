@@ -21,11 +21,12 @@ const Conducted = (props) => {
     return (
         <Card style={{ width: '100%' }}>
             <Card.Body style = {{display: 'flex', width: '100%'}}>
-                <Button variant="success" disabled = {(props.status === "Ongoing" || props.declared) ? true : false} style = {{marginRight: '20px'}} onClick = {showResult}>Show Results</Button>
-                <Button variant="success" disabled = {(props.status === "Ongoing" || props.declared) ? true : false} style = {{marginRight: '20px'}} onClick = {declareResult}>Delcare Results</Button>
-                <Button variant={props.status === "Ongoing"? "warning": "danger"} style = {{marginRight: '20px', width: '100px'}}>{props.status}</Button>
-                <Button variant="outline-primary" style = {{marginRight: '20px',  width: '200px'}}>Start Time</Button>
-                <Button variant="outline-primary" style = {{marginRight: '20px',  width: '200px'}}>End Time</Button>
+                <Button variant="success" disabled = {(props.status === "Ongoing" || props.status === "Not Started" || props.declared) ? true : false} style = {{marginRight: '20px'}} onClick = {showResult}>Show Results</Button>
+                <Button variant="success" disabled = {(props.status === "Ongoing" || props.status === "Not Started" || props.declared) ? true : false} style = {{marginRight: '20px'}} onClick = {declareResult}>Delcare Results</Button>
+                <Button variant={props.status === "Ongoing"? "warning": props.status === "Not Started"? "secondary":"danger"} style = {{marginRight: '20px', width: '100px'}}>{props.status}</Button>
+                <Button variant="outline-primary" style = {{marginRight: '20px',  width: '200px'}}>{props.startTime.split("T")[0] + " " + props.startTime.split("T")[1].substring(0, 5)}</Button>
+                To
+                <Button variant="outline-primary" style = {{marginRight: '20px', marginLeft: '20px', width: '200px'}}>{props.endTime.split("T")[0] + " " + props.endTime.split("T")[1].substring(0, 5)}</Button>
                 <Card.Title style = {{marginLeft: '20px'}}>{props.name}</Card.Title>
             </Card.Body>
             {
