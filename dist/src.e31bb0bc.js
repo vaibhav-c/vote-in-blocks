@@ -51695,8 +51695,13 @@ const Vote = props => {
 
   const VoteGivenFinalYes = event => {
     event.preventDefault();
-    alert('You have voted for ' + props.name);
-    window.location.href = "http://localhost:1234/vote"; //smart
+    window.contract.sendVote({
+      electionId: props.electionId,
+      candidateId: props.candidateId,
+      userId: props.userId
+    }); //alert('You have voted for ' + props.candidateId);
+    //window.location.href = "http://localhost:1234/vote";
+    //smart
   };
 
   const VoteGiven = event => {
@@ -70012,12 +70017,17 @@ const Vote = props => {
     electionList: []
   });
 
-  if (window.accountId === '') {
-    console.log("login");
-    (0, _utils.login)();
+  if (localStorage.getItem("email") === undefined) {
+    window.location.pathname = "/";
+  } else {
+    if (window.accountId === '') {
+      console.log("login");
+      (0, _utils.login)();
+    }
   }
 
   let email = localStorage.getItem("email");
+  let id = localStorage.getItem("id");
   (0, _react.useEffect)(() => {
     _axios.default.get(`http://localhost:5000/api/votingelection`, {
       params: {
@@ -70033,7 +70043,7 @@ const Vote = props => {
         alert('Some Error Occurred');
       }
     }).catch(err => {
-      console.log(err.response);
+      alert(err.response.data.error);
     });
   }, []);
   let fetched;
@@ -70051,8 +70061,9 @@ const Vote = props => {
           return /*#__PURE__*/_react.default.createElement(_VoteCard.default, {
             name: candidate.name,
             url: candidate.url,
-            number: candidate.number,
-            candidateID: "ppp"
+            userId: id,
+            electionId: election._id,
+            candidateId: candidate._id
           });
         }));
       }
@@ -70614,7 +70625,7 @@ var _Register = _interopRequireDefault(require("../../Components/Register Form/R
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const LoginPage = props => {
-  if (localStorage.getItem("email") === undefined) {
+  if (localStorage.getItem("email") !== undefined) {
     window.location.replace("/home");
   }
 
@@ -76674,6 +76685,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 const initialState = {
+  id: '',
   email: '',
   name: '',
   dateOfBirth: '',
@@ -76683,11 +76695,13 @@ const initialState = {
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'SET_USER':
+      localStorage.setItem("id", action.payload.id);
       localStorage.setItem("email", action.payload.email);
       localStorage.setItem("dateOfBirth", action.payload.dateOfBirth);
       localStorage.setItem("name", action.payload.name);
       localStorage.setItem("aadhar", action.payload.aadhar);
       return { ...state,
+        id: action.payload.id,
         email: action.payload.email,
         name: action.payload.name,
         dateOfBirth: action.payload.dateOfBirth,
@@ -76700,6 +76714,7 @@ const authReducer = (state, action) => {
 };
 
 const Context = (0, _react.createContext)({
+  id: '',
   email: '',
   name: '',
   dateOfBirth: '',
@@ -76720,6 +76735,7 @@ const Provider = props => {
 
   return /*#__PURE__*/_react.default.createElement(Context.Provider, _extends({
     value: {
+      id: state.id,
       email: state.email,
       name: state.name,
       dateOfBirth: state.dateOfBirth,
@@ -76778,6 +76794,7 @@ const Home = props => {
       }
 
       context.setUser({
+        id: decoded.id,
         email: decoded.email,
         dateOfBirth: decoded.dateOfBirth,
         name: decoded.name,
@@ -99219,18 +99236,18 @@ const Election = props => {
 
       for (let i = 0; i < Object.keys(values.election.candidateDetails).length; i++) {
         if (values.election.candidateDetails[i].name.trim() === '') {
-          message += "" + cnt + ". Candidate Name for Candidate " + (i + 1) + " is empty";
+          message += "" + cnt + ". Candidate Name for Candidate " + (i + 1) + " is empty\n";
           cnt++;
         }
 
         if (values.election.candidateDetails[i].url.trim() === '') {
-          message += "" + cnt + ". Candidate Symbol for Candidate " + (i + 1) + " is empty";
+          message += "" + cnt + ". Candidate Symbol for Candidate " + (i + 1) + " is empty\n";
           cnt++;
         }
       }
 
       if (values.election.name.trim() === '') {
-        message += "" + cnt + ". Name cannot be empty";
+        message += "" + cnt + ". Name cannot be empty\n";
         cnt++;
       }
 
@@ -99315,15 +99332,39 @@ const Election = props => {
       _axios.default.post(`http://localhost:5000/api/voting`, {
         election
       }).then(res => {
-        authenticate(res, () => {
-          window.location.reload(); //setFormData({})
-          //    console.log(res);
-          //    console.log('Logged in');
+        console.log(res);
+        let candidateIds = [];
+
+        for (let i = 0; i < Object.keys(res.data.candidateDetails).length; i++) {
+          candidateIds.push(res.data.candidateDetails[i]._id);
+        }
+
+        console.log(candidateIds);
+        window.contract.setUpElection({
+          electionId: res.data.id,
+          candidateIds: candidateIds
         });
+        setValues({ ...values,
+          position: 1,
+          election: {
+            name: '',
+            desc: '',
+            startTime: '',
+            endTime: '',
+            candidates: 0,
+            candidateDetails: [],
+            invites: [],
+            resultsDeclared: false,
+            adminEmail: localStorage.getItem("email")
+          }
+        }); //window.location.reload();
+        //setFormData({})
+        //    console.log(res);
+        //    console.log('Logged in');
       }).catch(err => {
         //setFormData({})
-        window.location.reload();
-        console.log(err.response);
+        //window.location.reload();
+        console.log(err);
       });
 
       console.log(values);
@@ -101804,7 +101845,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53121" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53382" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

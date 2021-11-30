@@ -12,12 +12,17 @@ const Vote = (props) => {
         electionList: []
     })
 
-    if(window.accountId === '') {
-        console.log("login");
-        login()
+    if(localStorage.getItem("email") === undefined) {
+        window.location.pathname = "/";
+    } else {
+        if(window.accountId === '') {
+            console.log("login");
+            login()
+        }
     }
 
     let email = localStorage.getItem("email");
+    let id = localStorage.getItem("id");
 
     useEffect(() => {
         axios.get(`http://localhost:5000/api/votingelection`,{
@@ -36,7 +41,7 @@ const Vote = (props) => {
                 }
                 
             }).catch((err)=>{
-                console.log(err.response);
+                alert(err.response.data.error);
             })
     }, []);
     
@@ -53,7 +58,7 @@ const Vote = (props) => {
                         <Tab.Pane key = {election.name} eventKey={"#" + election.name}>
                             {
                             election.candidateDetails.map((candidate) => {
-                                return (<VoteCard name = {candidate.name} url = {candidate.url} number = {candidate.number} candidateID = "ppp"/>);
+                                return (<VoteCard name = {candidate.name} url = {candidate.url} userId = {id} electionId = {election._id} candidateId = {candidate._id}/>);
                             })
                             } 
                         </Tab.Pane>

@@ -7,7 +7,7 @@ import Register from '../../Components/Register Form/Register';
 
 const LoginPage = (props) => {
 
-    if(localStorage.getItem("email") === undefined) {
+    if(localStorage.getItem("email") !== undefined) {
         window.location.replace("/home"); 
     }
 

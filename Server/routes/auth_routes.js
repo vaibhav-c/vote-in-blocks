@@ -21,6 +21,7 @@ router.get('/auth/google/callback',
       } else {
         console.log(req)
         const token = jwt.sign({
+            id: req.user._id,
             name: req.user.name,
             email: req.user.email,
             aadhar: req.user.aadhar,
@@ -49,10 +50,19 @@ router.post('/register',async(req,res)=>{
         let foundEmail = await User.findOne({
             email
         })
-        if(foundEmail)
-            return res.status(400).json({
-                error: "email is taken"
+        if(foundEmail) {
+                return res.status(400).json({
+                    error: "Email is taken"
+            })
+        }
+        let foundAadhar = await User.findOne({
+            aadhar
         })
+        if(foundAadhar) {
+                return res.status(400).json({
+                    error: "Aadhar is taken"
+            })
+        }
     }
     const user = new User({
         name,
@@ -86,6 +96,7 @@ router.post('/login',async (req,res)=>{
     if(foundemail){
             if(foundemail.password === password){
                 const token = jwt.sign({
+                    id: foundemail._id,
                     name: foundemail.name,
                     email: foundemail.email,
                     aadhar: foundemail.aadhar,
@@ -143,6 +154,8 @@ router.post('/voting',async(req,res)=>{
             console.log("saved");
           return res.json({
             success: true,
+            id: vote._id,
+            candidateDetails: vote.candidateDetails,
             message: 'saved'
           });
         }

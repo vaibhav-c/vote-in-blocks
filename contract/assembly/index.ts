@@ -15,10 +15,12 @@
 import { Context, logging, storage, PersistentUnorderedMap } from 'near-sdk-as'
 
 const DEFAULT_MESSAGE = 'Hello'
-//Election ID k andar Candidate ID k andar votes per candidate
-let elections = new PersistentUnorderedMap<string, PersistentUnorderedMap<string, u64>>("electionPerCandidateVotes");
-//User ID k andar Election ID k andar random int
-let voted = new PersistentUnorderedMap<string, PersistentUnorderedMap<string, i32>>("userVotedElection");
+
+let elections = new PersistentUnorderedMap<string, string>("candidatesToElection");
+
+let candidates = new PersistentUnorderedMap<string, u64>("votesPerCandidate");
+
+let voted = new PersistentUnorderedMap<string, string[]>("userVotedElection");
 
 // Exported functions will be part of the public interface for your smart contract.
 // Feel free to extract behavior to non-exported functions!
@@ -46,42 +48,32 @@ export function setGreeting(message: string): void {
 }
 
 export function setUpElection(electionId: string, candidateIds:string[]):void{
-  let candidates = new PersistentUnorderedMap<string, u64>("candidates");
   for(let i = 0; i < candidateIds.length; i++) {
+    elections.set(candidateIds[i], electionId);
     candidates.set(candidateIds[i], 0);
   }
-  elections.set(electionId, candidates);
+  voted.set(electionId, []);
+  logging.log(`Saved`)
 }
 
-export function sendVote(electionId: string, candidateId:string, userId: string):void{
-  if(elections.contains(electionId)) {
-    let candidateToVote = elections.getSome(electionId);
-    if(candidateToVote.contains(candidateId)) {
-      let votesCurrent = candidateToVote.getSome(candidateId);
-      if(voted.contains(userId)) {
-        let userVoted = voted.getSome(userId);
-        if(userVoted.contains(electionId)) {
-          logging.log("Already Voted");
-        } else {
-          let tick: i32 = 1;
-          candidateToVote.set(candidateId, votesCurrent + tick);
-          elections.set(electionId, candidateToVote);
-          let electionsVoted = new PersistentUnorderedMap<string, i32>("votedHere");
-          electionsVoted.set(electionId, 1);
-          voted.set(userId, electionsVoted);
-        }
+export function sendVote(electionId: string, candidateId: string, userId: string):void{
+  if(elections.contains(candidateId)) {
+    logging.log(`${elections.getSome(candidateId)}`)
+    if(elections.getSome(candidateId) == electionId) {
+      let usersVoted = voted.getSome(electionId);
+      if(usersVoted.includes(userId)) {
+        logging.log(`Voted already`)
       } else {
-        let newVoter = new PersistentUnorderedMap<string, i32>("newvoter");
-        newVoter.set(electionId, 1);
-        voted.set(userId, newVoter);
+        let currentVotes = candidates.getSome(candidateId)
         let tick: i32 = 1;
-        candidateToVote.set(candidateId, votesCurrent + tick);
-        elections.set(electionId, candidateToVote);
+        candidates.set(candidateId, currentVotes + tick);
+        usersVoted.push(userId);
+        voted.set(electionId, usersVoted);
       }
     } else {
-      logging.log("Candidate DNE");
+      logging.log(`Candidate and Election Do Not Match`);
     }
   } else {
-    logging.log("Election DNE");
+    logging.log(`Candidate DNE`);
   }
 }

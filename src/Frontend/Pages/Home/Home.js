@@ -21,7 +21,7 @@ const Home = (props) => {
             if(localStorage.getItem("email") === undefined && isExpired(token.substring(0, token.length - 1))) {
                 window.location.href = "/";
             }
-            context.setUser({email: decoded.email, dateOfBirth: decoded.dateOfBirth, name: decoded.name, aadhar: decoded.aadhar});
+            context.setUser({id: decoded.id, email: decoded.email, dateOfBirth: decoded.dateOfBirth, name: decoded.name, aadhar: decoded.aadhar});
         }
     }, []);
 
