@@ -9,20 +9,28 @@ import './Home.css';
 const Home = (props) => {
 
     const context = useContext(Context);
-    console.log(context);
+    
 
     useEffect(() => {
         let s = window.location.href;
         if(s.indexOf("?") !== -1) {
             const token = s.split("?")[1];
             const decoded = decodeToken(token.substring(0, token.length - 1));
-            console.log(decoded);
+            //console.log(decoded);
             //set user
             if(localStorage.getItem("email") === undefined && isExpired(token.substring(0, token.length - 1))) {
                 window.location.href = "/";
             }
-            context.setUser({email: decoded.email, dateOfBirth: decoded.dateOfBirth, name: decoded.name, aadhar: decoded.aadhar});
+            context.setUser({id: decoded.id, email: decoded.email, dateOfBirth: decoded.dateOfBirth, name: decoded.name, aadhar: decoded.aadhar});
         }
+    }, []);
+
+
+    let ongoingElection = 0;
+    let votedElection = 0;
+    let electionConducted = 0;
+    useEffect(() => {
+        
     }, []);
 
     return (
@@ -41,7 +49,7 @@ const Home = (props) => {
                 </Card>
             </Container>
             <div style = {{display: 'flex', marginTop: '20px'}}>
-                <div class = "col">
+                <div className= "col">
                     <Card style={{ width: '18rem', margin: 'auto', backgroundColor: 'darkblue', color: 'white'}}>
                         <Card.Body>
                             <Card.Title>Elections Conducted</Card.Title>
@@ -50,20 +58,20 @@ const Home = (props) => {
                                 You have conducted these elections using the app.
                             </Card.Text>
                         </Card.Body>
-                        <div class="numbers">
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">9</span>
+                        <div className="numbers">
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">{electionConducted / 100}</span>
                             </span>
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">1</span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">{(electionConducted % 100) / 10}</span>
                             </span>
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">5</span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">{electionConducted % 10}</span>
                             </span>
                         </div>
                     </Card>
                 </div>
-                <div class = "col">
+                <div className= "col">
                     <Card style={{ width: '18rem', margin: 'auto', backgroundColor: 'darkblue', color: 'white' }}>
                         <Card.Body>
                             <Card.Title>Elections Voted</Card.Title>
@@ -72,20 +80,20 @@ const Home = (props) => {
                                 You have voted in these elections. You can't vote again.
                             </Card.Text>
                         </Card.Body>
-                        <div class="numbers">
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">5</span>
+                        <div className="numbers">
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">{votedElection / 100}</span>
                             </span>
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">5</span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">{(votedElection % 100) / 10}</span>
                             </span>
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">7</span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">{votedElection % 10}</span>
                             </span>
                         </div>
                     </Card>
                 </div>
-                <div class = "col">
+                <div className= "col">
                     <Card style={{ width: '18rem', margin: 'auto', backgroundColor: 'darkblue', color: 'white' }}>
                         <Card.Body>
                             <Card.Title>Ongoing Elections</Card.Title>
@@ -94,15 +102,15 @@ const Home = (props) => {
                                 Vote in the given elections where you are invited to vote.
                             </Card.Text>
                         </Card.Body>
-                        <div class="numbers">
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">8</span>
+                        <div className="numbers">
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">{ongoingElection / 100}</span>
                             </span>
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">5</span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">{(ongoingElection % 100) / 10}</span>
                             </span>
-                            <span class="numbers__window">
-                                <span class="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">2</span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">{ongoingElection % 10}</span>
                             </span>
                         </div>
                     </Card>

@@ -16,8 +16,9 @@ const Vote = (props) => {
 
     const VoteGivenFinalYes = (event) => {
         event.preventDefault();
-        alert('You have voted for ' + props.name);
-        window.location.href = "http://localhost:1234/vote";
+        window.contract.sendVote({electionId: props.electionId, candidateId: props.candidateId, userId: props.userId});
+        //alert('You have voted for ' + props.candidateId);
+        //window.location.href = "http://localhost:1234/vote";
         //smart
     }
 

@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import LoginPage from '../../Pages/Login/Login';
+import React, {useState, useContext} from 'react';
 import axios from 'axios';
 import './Login.css';
 
@@ -7,8 +6,7 @@ const Login = (props) => {
 
     const [values, setValues] = useState({
         email: '',
-        password: '',
-            
+        password: '',   
     })
 
     const onChangeHandler = (text) => (e) => {
@@ -23,23 +21,19 @@ const Login = (props) => {
                 email,
                 password
             }).then((res)=>{
-                authenticate(res,()=>{
-                    setFormData({...formData,
-                        username: '',
-                        password: ''})
-                        console.log(res);
-                        console.log('Logged in');
-                });
-                
-            }).catch((err)=>{
-                setFormData({...formData,
+                setValues({
+                    ...values,
                     email: '',
                     password: ''
-                    })
-                console.log(err.response);
+                })
+                window.location.href = `/home?${res.data.token}`;
+                console.log('Logged in');
+            }).catch((err)=>{
+                console.log(err);
+                alert(err.response.data.error);
             })
         } else {
-            console.log('Please fill all the fields');
+            alert('Please fill all the fields');
         }
         
         }
@@ -59,16 +53,16 @@ const Login = (props) => {
                     <form>
                     <div className="form-floating mb-3">
                         <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" onChange={onChangeHandler('email')}></input>
-                        <label for="floatingInput">Email address</label>
+                        <label htmlFor="floatingInput">Email address</label>
                     </div>
                     <div className="form-floating mb-3">
                         <input type="password" className="form-control" id="floatingPassword" placeholder="Password" onChange={onChangeHandler('password')}></input>
-                        <label for="floatingPassword">Password</label>
+                        <label htmlFor="floatingPassword">Password</label>
                     </div>
 
                     <div className="form-check mb-3">
                         <input className="form-check-input" type="checkbox" value="" id="rememberPasswordCheck"></input>
-                        <label className="form-check-label" for="rememberPasswordCheck">
+                        <label className="form-check-label" htmlFor="rememberPasswordCheck">
                         Remember password
                         </label>
                     </div>

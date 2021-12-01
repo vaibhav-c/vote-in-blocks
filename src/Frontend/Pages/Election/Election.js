@@ -78,16 +78,16 @@ const Election = (props) => {
             let message = "Can't go further because of following errors : \n";
             for(let i = 0; i < Object.keys(values.election.candidateDetails).length; i++) {
                 if(values.election.candidateDetails[i].name.trim() === '') {
-                    message += "" + cnt + ". Candidate Name for Candidate " + (i + 1) + " is empty"
+                    message += "" + cnt + ". Candidate Name for Candidate " + (i + 1) + " is empty\n"
                     cnt++;
                 }
                 if(values.election.candidateDetails[i].url.trim() === '') {
-                    message += "" + cnt + ". Candidate Symbol for Candidate " + (i + 1 ) + " is empty"
+                    message += "" + cnt + ". Candidate Symbol for Candidate " + (i + 1 ) + " is empty\n"
                     cnt++
                 }
             }
             if(values.election.name.trim() === '') {
-                message += "" + cnt + ". Name cannot be empty";
+                message += "" + cnt + ". Name cannot be empty\n";
                 cnt++;
             }
             if(cnt === 1) {
@@ -163,17 +163,39 @@ const Election = (props) => {
             axios.post(`http://localhost:5000/api/voting`,{
                    election
                 }).then((res)=>{
-                    authenticate(res,()=>{
-                        window.location.reload();
-                        //setFormData({})
-                        //    console.log(res);
-                        //    console.log('Logged in');
-                    });
+                    console.log(res);
+                    let candidateIds = []
+                    for(let i = 0; i < Object.keys(res.data.candidateDetails).length; i++) {
+                        candidateIds.push(res.data.candidateDetails[i]._id);
+                    }
+                    console.log(candidateIds)
+                    window.contract.setUpElection({electionId: res.data.id, candidateIds: candidateIds})
+                    setValues({
+                        ...values,
+                        position: 1,
+                        election: {
+                            name: '',
+                            desc: '',
+                            startTime: '',
+                            endTime: '',
+                            candidates: 0,
+                            candidateDetails: [],
+                            invites: [],
+                            resultsDeclared: false,
+                            adminEmail: localStorage.getItem("email")
+                        }
+                    }); 
+                    //window.location.reload();
+                    //setFormData({})
+                    //    console.log(res);
+                    //    console.log('Logged in');
+
                 }).catch((err)=>{
                     //setFormData({})
-                    window.location.reload();
-                    console.log(err.response);
+                    //window.location.reload();
+                    console.log(err);
                 })
+            
             console.log(values);
         }
     }

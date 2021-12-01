@@ -147,7 +147,7 @@ const Details = (props) => {
                                 showModal: false
                             })
                         }).catch((err)=>{
-                            alert(err.response);
+                            alert(err.response.data.error);
                             setValues({
                                 ...values, 
                                 showModal: false

@@ -2,6 +2,8 @@ const express = require('express');
 const {validationResult} = require('express-validator');
 const jwt = require('jsonwebtoken');
 
+const nodemailer = require("nodemailer");
+
 const errorHandler = require('../Helper/dbErrorHandler');
 const User = require('../models/auth_models');
 const Vote = require('../models/voting_model');
@@ -21,6 +23,7 @@ router.get('/auth/google/callback',
       } else {
         console.log(req)
         const token = jwt.sign({
+            id: req.user._id,
             name: req.user.name,
             email: req.user.email,
             aadhar: req.user.aadhar,
@@ -49,10 +52,19 @@ router.post('/register',async(req,res)=>{
         let foundEmail = await User.findOne({
             email
         })
-        if(foundEmail)
-            return res.status(400).json({
-                error: "email is taken"
+        if(foundEmail) {
+                return res.status(400).json({
+                    error: "Email is taken"
+            })
+        }
+        let foundAadhar = await User.findOne({
+            aadhar
         })
+        if(foundAadhar) {
+                return res.status(400).json({
+                    error: "Aadhar is taken"
+            })
+        }
     }
     const user = new User({
         name,
@@ -85,16 +97,17 @@ router.post('/login',async (req,res)=>{
     })
     if(foundemail){
             if(foundemail.password === password){
-                const token = jwt.sign({ _id: foundemail._id},process.env.SECRET,{expiresIn: '7d'});
-                const {email,name} = foundemail;
+                const token = jwt.sign({
+                    id: foundemail._id,
+                    name: foundemail.name,
+                    email: foundemail.email,
+                    aadhar: foundemail.aadhar,
+                    dateOfBirth: foundemail.dateOfBirth
+                }, process.env.SECRET, {expiresIn: 50000});
                 console.log("Found");
+                console.log(token);
                 return res.json({
-                    token,
-                    user:{
-                        name,
-                        email
-                    }
-                    
+                    token
                 })
             }
             else{
@@ -112,6 +125,13 @@ router.post('/login',async (req,res)=>{
 })
 
 router.post('/voting',async(req,res)=>{
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+        user: process.env.email,
+        pass: process.env.NodemailerPassword
+        }
+    });
     const {
         name,
         desc,
@@ -133,6 +153,23 @@ router.post('/voting',async(req,res)=>{
     })
     console.log(candidateDetails);
 
+    var mailOptions = {
+        from: process.env.email,
+        to: invites,
+        subject: 'Invites',
+        html: `
+            
+        `
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
+
     vote.save((err) => {
         if (err) {
           console.log('Save error ', errorHandler(err));
@@ -143,6 +180,8 @@ router.post('/voting',async(req,res)=>{
             console.log("saved");
           return res.json({
             success: true,
+            id: vote._id,
+            candidateDetails: vote.candidateDetails,
             message: 'saved'
           });
         }
@@ -150,11 +189,10 @@ router.post('/voting',async(req,res)=>{
 })
 
 router.get('/conducted',async(req,res)=>{
-    const {email} = req.body
+    const {email} = req.query
     let Found = await Vote.find({
-        adminEmail: email
+        adminEmail : email
     })
-
     if(Found)
         return res.json({
             success: true,
@@ -169,7 +207,7 @@ router.get('/conducted',async(req,res)=>{
 
 
 router.get('/votingelection',async(req,res)=>{
-    const { email } = req.body
+    const { email } = req.query
     let Found = await Vote.find({
         invites: email
     })

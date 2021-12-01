@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Menubar from '../../Components/Menubar/Menubar';
-import {Tab, Row, Col, Form, Button, Container} from 'react-bootstrap';
+import {Tab, Row, Col, Form, Button, Container, Card} from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
+import axios from 'axios';
 import ConductedCard from '../../Components/Conducted Card/Conducted Card';
 
 const Vote = (props) => {
+
 
     if(localStorage.getItem("email") === undefined) {
         window.location.pathname = "/";
@@ -16,39 +18,55 @@ const Vote = (props) => {
     }
 
     const [values, setValues] = useState({
-        electionList: [
-            {
-                'name': 'Vaibhav', 
-                'status': 'Ongoing',
-                'declared': false,
-                'candidates': [
-                    {
-                        'name': 'BJP', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/e/e8/BJP_election_symbol.png'
-                    }, 
-                    {
-                        'name': 'CON', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-                    }, 
-                    {
-                        'name': 'SP', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/6/65/Samajwadi_Party_Flag.jpg'
-                    }
-                ]
-            }, 
-            {
-                'name': 'Vaibhav1',
-                'status': 'Finished', 
-                'declared': true,
-                'candidates': [
-                    {
-                        'name': 'abc', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-                    }
-                ]
-            }
-        ]
-    })
+        electionList: []
+    });
+
+    let email = localStorage.getItem("email");
+
+    useEffect(() => {
+        axios.get(`http://localhost:5000/api/conducted`,{
+                params: {
+                    email: email
+                }
+            }).then((res)=>{
+                if(res.data.success) {
+                    setValues({
+                        ...values,
+                        electionList: res.data.conducted
+                    }) 
+                } else {
+                    alert('Some Error Occurred');
+                }
+                
+            }).catch((err)=>{
+                console.log(err.response);
+            })
+    }, []);
+
+    let currentTime = new Date().toISOString();
+
+    if(Object.keys(values.electionList).length > 0) {
+        let startDate = values.electionList[0].startTime.split("T")[0] + " " + values.electionList[0].startTime.split("T")[1].substring(0, 5);
+        let endDate = values.electionList[0].endTime.split("T")[0] + " " + values.electionList[0].endTime.split("T")[1].substring(0, 5);
+        let current = currentTime.split("T")[0] + " " + currentTime.split("T")[1].substring(0, 5);
+        console.log(startDate, " ", endDate, " ", current, " ", startDate > current);
+    }
+
+    let fetched;
+    if(Object.keys(values.electionList).length !== 0) {
+        console.log(values.electionList);
+        fetched = values.electionList.map((election) => {
+                        let status = (currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1 ? "Ongoing" : (currentTime.localeCompare(election.startTime) === -1)? "Not Started" : "Finished");
+                        return (
+                            <Tab.Pane style = {{marginBottom: '15px'}} key = {election.id} eventKey="#">
+                                <ConductedCard name = {election.name} declared = {election.declared} status = {status} startTime = {election.startTime} endTime = {election.endTime}/>
+                            </Tab.Pane>
+                        );
+                    });
+    } else {
+        fetched = (<Card>No Elections Conducted</Card>);
+    }
+
     return (
         <>
             <Menubar/>
@@ -58,14 +76,7 @@ const Vote = (props) => {
                         <Col sm={12}>
                         <Tab.Content>
                             {
-                                values.electionList.map((election) => {
-                                    return (
-                                        
-                                        <Tab.Pane style = {{marginBottom: '15px'}} key = {election.name} eventKey="#">
-                                            <ConductedCard name = {election.name} declared = {props.declared} candidateID = "ppp" status = {election.status}/>
-                                        </Tab.Pane>
-                                    );
-                                })
+                                fetched
                             }
                         </Tab.Content>
                         </Col>

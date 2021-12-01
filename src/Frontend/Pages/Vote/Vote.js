@@ -1,47 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Menubar from '../../Components/Menubar/Menubar';
 import {Tab, Row, Col, Card} from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
 import VoteCard from '../../Components/Vote Card/Vote Card';
 import { login, logout } from "../../../utils";
-
+import axios from 'axios';
 
 const Vote = (props) => {
 
     const [values, setValues] = useState({
-        electionList: [
-            {
-                'name': 'Vaibhav', 
-                'candidates': [
-                    {
-                        'name': 'BJP', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/e/e8/BJP_election_symbol.png'
-                    }, 
-                    {
-                        'name': 'CON', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-                    }, 
-                    {
-                        'name': 'SP', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/6/65/Samajwadi_Party_Flag.jpg'
-                    }
-                ]
-            }, 
-            {
-                'name': 'Vaibhav1', 
-                'candidates': [
-                    {
-                        'name': 'abc', 
-                        'url': 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Hand_INC.svg/1200px-Hand_INC.svg.png'
-                    }
-                ]
-            }
-        ]
+        electionList: []
     })
 
-    if(window.accountId === '') {
-        console.log("login");
-        login()
+    if(localStorage.getItem("email") === undefined) {
+        window.location.pathname = "/";
+    } else {
+        if(window.accountId === '') {
+            console.log("login");
+            login()
+        }
+    }
+
+    let email = localStorage.getItem("email");
+    let id = localStorage.getItem("id");
+
+    useEffect(() => {
+        axios.get(`http://localhost:5000/api/votingelection`,{
+                params: {
+                    email: email
+                }
+            }).then((res)=>{
+                if(res.data.success) {
+                    setValues({
+                        ...values,
+                        electionList: res.data.conducted
+                    });
+                    console.log(res.data.conducted)
+                } else {
+                    alert('Some Error Occurred');
+                }
+                
+            }).catch((err)=>{
+                alert(err.response.data.error);
+            })
+    }, []);
+    
+    let fetched;
+    let fetchedCandidates;
+    let currentTime = new Date().toISOString();
+    let n = 0;
+
+    if(Object.keys(values.electionList).length !== 0) {
+        fetchedCandidates = (
+            values.electionList.map((election) => {
+                if(currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1) {
+                    return (
+                        <Tab.Pane key = {election.name} eventKey={"#" + election.name}>
+                            {
+                            election.candidateDetails.map((candidate) => {
+                                return (<VoteCard name = {candidate.name} url = {candidate.url} userId = {id} electionId = {election._id} candidateId = {candidate._id}/>);
+                            })
+                            } 
+                        </Tab.Pane>
+                    );
+                }
+            })
+        )
+
+        fetched = (
+            values.electionList.map((election) => {
+                if(currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1) {
+                    n++;
+                    return (
+                        <ListGroup.Item key = {election.name} action href={"#" + election.name}>
+                            {election.name}
+                        </ListGroup.Item>
+                    );
+
+                }
+        }));
+    } else {
+        fetched = (<ListGroup.Item key = "none" action href="#none">
+                        Nothing to Show
+                    </ListGroup.Item>)
+        fetchedCandidates = (
+            <Tab.Pane key = "none" eventKey="#none">
+                <Card style={{ width: '100%', backgroundColor: "white" }} >
+                    <Card.Body style = {{display: 'flex', width: '100%'}}>
+                        You haven't been invited to vote in any elections
+                    </Card.Body>
+                </Card>
+            </Tab.Pane>
+        )
+    }
+
+    if(n === 0) {
+        fetched = (<ListGroup.Item key = "none" action href="#none">
+                        Nothing to Show
+                    </ListGroup.Item>)
+        fetchedCandidates = (
+            <Tab.Pane key = "none" eventKey="#none">
+                <Card style={{ width: '100%', backgroundColor: "white" }} >
+                    <Card.Body style = {{display: 'flex', width: '100%'}}>
+                        You haven't been invited to vote in any elections
+                    </Card.Body>
+                </Card>
+            </Tab.Pane>
+        )
     }
 
     
@@ -53,30 +118,14 @@ const Vote = (props) => {
                     <Col sm={4}>
                     <ListGroup>
                         {
-                            values.electionList.map((election) => {
-                                return (
-                                    <ListGroup.Item key = {election.name} action href={"#" + election.name}>
-                                        {election.name}
-                                    </ListGroup.Item>
-                                );
-                            })
+                            fetched
                         }
                     </ListGroup>
                     </Col>
                     <Col sm={8}>
                     <Tab.Content>
                         {
-                            values.electionList.map((election) => {
-                                return (
-                                    <Tab.Pane key = {election.name} eventKey={"#" + election.name}>
-                                        {
-                                        election.candidates.map((candidate) => {
-                                            return (<VoteCard name = {candidate.name} url = {candidate.url} candidateID = "ppp"/>);
-                                        })
-                                        } 
-                                    </Tab.Pane>
-                                );
-                            })
+                            fetchedCandidates
                         }
                         <Tab.Pane eventKey="#linkinit">
                             <Card style={{ width: '100%' }}>

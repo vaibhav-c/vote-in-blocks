@@ -13,8 +13,6 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true,
-        
     },
     password:{
         type: String,
@@ -25,7 +23,8 @@ const userSchema = mongoose.Schema({
     },
     aadhar:{
         type: String,
-        required: true
+        required: true,
+        unique: true
     }
     
 },{ timestamps: true });
