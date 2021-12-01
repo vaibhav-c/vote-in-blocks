@@ -25,6 +25,11 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    aadharImg:
+    {
+        data: Buffer,
+        contentType: String
     }
     
 },{ timestamps: true });
