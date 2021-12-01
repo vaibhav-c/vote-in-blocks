@@ -14,7 +14,7 @@
 
 import { Context, logging, storage, PersistentUnorderedMap } from 'near-sdk-as'
 
-const DEFAULT_MESSAGE = 'Hello'
+//const DEFAULT_MESSAGE = 'Hello'
 
 let elections = new PersistentUnorderedMap<string, string>("candidatesToElection");
 
@@ -22,30 +22,24 @@ let candidates = new PersistentUnorderedMap<string, u64>("votesPerCandidate");
 
 let voted = new PersistentUnorderedMap<string, string[]>("userVotedElection");
 
-// Exported functions will be part of the public interface for your smart contract.
-// Feel free to extract behavior to non-exported functions!
-export function getGreeting(accountId: string): string | null {
-  // This uses raw `storage.get`, a low-level way to interact with on-chain
-  // storage for simple contracts.
-  // If you have something more complex, check out persistent collections:
-  // https://docs.near.org/docs/concepts/data-storage#assemblyscript-collection-types
-  return storage.get<string>(accountId, DEFAULT_MESSAGE)
+
+
+export function getResults(candidateIds: string): u64  {
+
+  return candidates.getSome(candidateIds);
+
 }
 
-export function getResults(accountId: string): string | null {
-  // This uses raw `storage.get`, a low-level way to interact with on-chain
-  // storage for simple contracts.
-  // If you have something more complex, check out persistent collections:
-  // https://docs.near.org/docs/concepts/data-storage#assemblyscript-collection-types
-  return storage.get<string>(accountId, DEFAULT_MESSAGE)
+export function getParticipation(electionId: string, userID: string): bool  {
+
+  if (voted.contains(electionId))
+    return voted.getSome(electionId).includes(userID);
+  else
+    return false;
+
 }
 
-export function setGreeting(message: string): void {
-  const accountId = Context.sender
-  // Use logging.log to record logs permanently to the blockchain!
-  logging.log(`Saving greeting "${message}" for account "${accountId}"`)
-  storage.set(accountId, message)
-}
+
 
 export function setUpElection(electionId: string, candidateIds:string[]):void{
   for(let i = 0; i < candidateIds.length; i++) {

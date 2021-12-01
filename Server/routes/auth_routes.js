@@ -2,6 +2,8 @@ const express = require('express');
 const {validationResult} = require('express-validator');
 const jwt = require('jsonwebtoken');
 
+const nodemailer = require("nodemailer");
+
 const errorHandler = require('../Helper/dbErrorHandler');
 const User = require('../models/auth_models');
 const Vote = require('../models/voting_model');
@@ -126,6 +128,13 @@ router.post('/login',async (req,res)=>{
 })
 
 router.post('/voting',async(req,res)=>{
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+        user: process.env.email,
+        pass: process.env.NodemailerPassword
+        }
+    });
     const {
         name,
         desc,
@@ -146,6 +155,23 @@ router.post('/voting',async(req,res)=>{
         resultsDeclared
     })
     console.log(candidateDetails);
+
+    var mailOptions = {
+        from: process.env.email,
+        to: invites,
+        subject: 'Invites',
+        html: `
+            
+        `
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
 
     vote.save((err) => {
         if (err) {
