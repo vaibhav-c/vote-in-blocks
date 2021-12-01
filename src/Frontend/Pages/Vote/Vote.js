@@ -12,7 +12,7 @@ const Vote = (props) => {
         electionList: []
     })
 
-    if(localStorage.getItem("email") === undefined) {
+    if(localStorage.getItem("email") === null) {
         window.location.pathname = "/";
     } else {
         if(window.accountId === '') {

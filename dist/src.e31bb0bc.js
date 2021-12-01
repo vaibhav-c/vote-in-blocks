@@ -51636,10 +51636,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const Menubar = props => {
   const moveToGiven = given => {
-    window.location.href = "http://localhost:1234/" + given;
+    window.location.href = given;
   };
 
-  const logout = () => {};
+  const logout = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
 
   return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Navbar, {
     bg: "dark",
@@ -70017,7 +70020,7 @@ const Vote = props => {
     electionList: []
   });
 
-  if (localStorage.getItem("email") === undefined) {
+  if (localStorage.getItem("email") === null) {
     window.location.pathname = "/";
   } else {
     if (window.accountId === '') {
@@ -70625,7 +70628,7 @@ var _Register = _interopRequireDefault(require("../../Components/Register Form/R
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const LoginPage = props => {
-  if (localStorage.getItem("email") !== undefined) {
+  if (localStorage.getItem("email") !== null) {
     window.location.replace("/home");
   }
 
@@ -76786,11 +76789,11 @@ const Home = props => {
 
     if (s.indexOf("?") !== -1) {
       const token = s.split("?")[1];
-      const decoded = (0, _reactJwt.decodeToken)(token.substring(0, token.length - 1)); //console.log(decoded);
-      //set user
+      const decoded = (0, _reactJwt.decodeToken)(token.substring(0, token.length - 1));
+      console.log(decoded); //set user
 
-      if (localStorage.getItem("email") === undefined && (0, _reactJwt.isExpired)(token.substring(0, token.length - 1))) {
-        window.location.href = "/";
+      if (localStorage.getItem("email") === null && (0, _reactJwt.isExpired)(token.substring(0, token.length - 1))) {
+        window.location.pathname = "/";
       }
 
       context.setUser({
@@ -76800,6 +76803,15 @@ const Home = props => {
         name: decoded.name,
         aadhar: decoded.aadhar
       });
+    } else {
+      if (localStorage.getItem("email") === null) {
+        window.location.pathname = "/";
+      } else {
+        if (window.accountId === '') {
+          console.log("login");
+          login();
+        }
+      }
     }
   }, []);
   let ongoingElection = 0;
@@ -76882,15 +76894,16 @@ const Home = props => {
     style: {
       width: '18rem',
       margin: 'auto',
+      height: '15rem',
       backgroundColor: 'darkblue',
       color: 'white'
     }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Elections Conducted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Total Elections Conducted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
     className: "mb-2 text-muted",
     style: {
       color: 'wheat'
     }
-  }, "Organizer"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "You have conducted these elections using the app.")), /*#__PURE__*/_react.default.createElement("div", {
+  }, "Organized by Voting App"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Elections conducted of the users, for the users and by the users.")), /*#__PURE__*/_react.default.createElement("div", {
     className: "numbers"
   }, /*#__PURE__*/_react.default.createElement("span", {
     className: "numbers__window"
@@ -76913,12 +76926,45 @@ const Home = props => {
     style: {
       width: '18rem',
       margin: 'auto',
+      height: '15rem',
       backgroundColor: 'darkblue',
       color: 'white'
     }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Elections Voted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Elections You Conducted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
+    className: "mb-2 text-muted",
+    style: {
+      color: 'wheat'
+    }
+  }, "Organized by You"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "You have conducted these elections. You can check them out at the conducted elections page.")), /*#__PURE__*/_react.default.createElement("div", {
+    className: "numbers"
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window__digit numbers__window__digit--1",
+    "data-fake": "8642519073"
+  }, "1")), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window__digit numbers__window__digit--2",
+    "data-fake": "5207186394"
+  }, "2")), /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window"
+  }, /*#__PURE__*/_react.default.createElement("span", {
+    className: "numbers__window__digit numbers__window__digit--3",
+    "data-fake": "8395216407"
+  }, "3"))))), /*#__PURE__*/_react.default.createElement("div", {
+    className: "col"
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
+    style: {
+      width: '18rem',
+      margin: 'auto',
+      height: '15rem',
+      backgroundColor: 'darkblue',
+      color: 'white'
+    }
+  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Elections Invited"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
     className: "mb-2 text-muted"
-  }, "You've Voted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "You have voted in these elections. You can't vote again.")), /*#__PURE__*/_react.default.createElement("div", {
+  }, "Cast your Vote"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Cast a vote in the vote section for all the live elections you are invited for.")), /*#__PURE__*/_react.default.createElement("div", {
     className: "numbers"
   }, /*#__PURE__*/_react.default.createElement("span", {
     className: "numbers__window"
@@ -76941,12 +76987,13 @@ const Home = props => {
     style: {
       width: '18rem',
       margin: 'auto',
+      height: '15rem',
       backgroundColor: 'darkblue',
       color: 'white'
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Ongoing Elections"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
     className: "mb-2 text-muted"
-  }, "You're Invited"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "Vote in the given elections where you are invited to vote.")), /*#__PURE__*/_react.default.createElement("div", {
+  }, "Organized by Voting App"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Text, null, "These many elections are live on our app. You can also conduct one by going to conduct page.")), /*#__PURE__*/_react.default.createElement("div", {
     className: "numbers"
   }, /*#__PURE__*/_react.default.createElement("span", {
     className: "numbers__window"
@@ -99161,7 +99208,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 const Election = props => {
   const context = (0, _react.useContext)(_context.Context);
 
-  if (localStorage.getItem("email") === undefined) {
+  if (localStorage.getItem("email") === null) {
     window.location.pathname = "/";
   } else {
     if (window.accountId === '') {
@@ -99625,7 +99672,7 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const Results = props => {
-  if (localStorage.getItem("email") === undefined) {
+  if (localStorage.getItem("email") === null) {
     window.location.pathname = "/";
   } else {
     if (window.accountId === '') {
@@ -99658,10 +99705,12 @@ const Results = props => {
   }, []);
   let fetched;
   let fetchedCandidates;
+  let n = 0;
 
   if (Object.keys(values.electionList).length !== 0) {
     fetchedCandidates = values.electionList.map(election => {
       if (election.resultsDeclared) {
+        n++;
         return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
           key: election.name,
           eventKey: "#" + election.name
@@ -99669,8 +99718,7 @@ const Results = props => {
           return /*#__PURE__*/_react.default.createElement(_ResultCard.default, {
             name: candidate.name,
             url: candidate.url,
-            number: candidate.number,
-            candidateID: "ppp"
+            candidateId: candidate._id
           });
         }));
       }
@@ -99684,9 +99732,28 @@ const Results = props => {
         }, election.name);
       }
     });
-  } else {
-    fetched = /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null);
-    fetchedCandidates = /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null);
+  }
+
+  if (n == 0) {
+    fetched = /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
+      key: "none",
+      action: true,
+      href: "#none"
+    }, "Nothing to Show");
+    fetchedCandidates = /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
+      key: "none",
+      eventKey: "#none"
+    }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
+      style: {
+        width: '100%',
+        backgroundColor: "white"
+      }
+    }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
+      style: {
+        display: 'flex',
+        width: '100%'
+      }
+    }, "You haven't been invited to vote in any election the results of which are declared so nothing to show")));
   }
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Container, {
@@ -99738,19 +99805,39 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 const Conducted = props => {
   const [values, setValues] = (0, _react.useState)({
-    showResult: false
+    showResult: false,
+    candidateResults: []
   });
 
   const showResult = event => {
     event.preventDefault();
-    setValues({ ...values,
-      showResult: !values.showResult
-    }); //window.location.href = "http://localhost:1234/vote";
+
+    for (let i in props.election.candidateDetails) {
+      let c = {
+        name: '',
+        votes: 0,
+        url: ''
+      };
+      c.name = i.name;
+      c.url = i.url;
+      c.votes = window.contract.getResults({
+        candidateId: i._id
+      });
+    }
   };
 
   const declareResult = event => {
     event.preventDefault();
-    alert('Declared'); //window.location.href = "http://localhost:1234/vote";
+    axios.post(`/update`, {
+      id: props.election._id
+    }).then(res => {
+      if (res.data.success) {
+        alert('Results Declared');
+        window.location.reload();
+      } else {
+        alert('Some error occured');
+      }
+    });
   };
 
   return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
@@ -99764,20 +99851,20 @@ const Conducted = props => {
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "success",
-    disabled: props.status === "Ongoing" || props.status === "Not Started" || props.declared ? true : false,
+    disabled: props.status === "Ongoing" || props.status === "Future" || props.election.resultsDeclared ? true : false,
     style: {
       marginRight: '20px'
     },
     onClick: showResult
   }, "Show Results"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "success",
-    disabled: props.status === "Ongoing" || props.status === "Not Started" || props.declared ? true : false,
+    disabled: props.status === "Ongoing" || props.status === "Future" || props.election.resultsDeclared ? true : false,
     style: {
       marginRight: '20px'
     },
     onClick: declareResult
   }, "Delcare Results"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
-    variant: props.status === "Ongoing" ? "warning" : props.status === "Not Started" ? "secondary" : "danger",
+    variant: props.status === "Ongoing" ? "warning" : props.status === "Future" ? "secondary" : "danger",
     style: {
       marginRight: '20px',
       width: '100px'
@@ -99788,18 +99875,18 @@ const Conducted = props => {
       marginRight: '20px',
       width: '200px'
     }
-  }, props.startTime.split("T")[0] + " " + props.startTime.split("T")[1].substring(0, 5)), "To", /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+  }, props.election.startTime.split("T")[0] + " " + props.election.startTime.split("T")[1].substring(0, 5)), "To", /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "outline-primary",
     style: {
       marginRight: '20px',
       marginLeft: '20px',
       width: '200px'
     }
-  }, props.endTime.split("T")[0] + " " + props.endTime.split("T")[1].substring(0, 5)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
+  }, props.election.endTime.split("T")[0] + " " + props.election.endTime.split("T")[1].substring(0, 5)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
     style: {
       marginLeft: '20px'
     }
-  }, props.name)), values.showResult ? /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
+  }, props.election.name)), values.showResult ? /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
     style: {
       display: 'flex',
       width: '100%'
@@ -99880,7 +99967,7 @@ const Vote = props => {
   if (Object.keys(values.electionList).length !== 0) {
     console.log(values.electionList);
     fetched = values.electionList.map(election => {
-      let status = currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1 ? "Ongoing" : currentTime.localeCompare(election.startTime) === -1 ? "Not Started" : "Finished";
+      let status = currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1 ? "Ongoing" : currentTime.localeCompare(election.startTime) === -1 ? "Future" : "Finished";
       return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Pane, {
         style: {
           marginBottom: '15px'
@@ -99888,11 +99975,8 @@ const Vote = props => {
         key: election.id,
         eventKey: "#"
       }, /*#__PURE__*/_react.default.createElement(_ConductedCard.default, {
-        name: election.name,
-        declared: election.declared,
-        status: status,
-        startTime: election.startTime,
-        endTime: election.endTime
+        election: election,
+        status: status
       }));
     });
   } else {
@@ -99913,7 +99997,379 @@ const Vote = props => {
 
 var _default = Vote;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","axios":"../node_modules/axios/index.js","../../Components/Conducted Card/Conducted Card":"Frontend/Components/Conducted Card/Conducted Card.js"}],"Frontend/Pages/Details/Details.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-bootstrap/ListGroup":"../node_modules/react-bootstrap/esm/ListGroup.js","axios":"../node_modules/axios/index.js","../../Components/Conducted Card/Conducted Card":"Frontend/Components/Conducted Card/Conducted Card.js"}],"../node_modules/@popperjs/core/lib/modifiers/applyStyles.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _getNodeName = _interopRequireDefault(require("../dom-utils/getNodeName.js"));
+
+var _instanceOf = require("../dom-utils/instanceOf.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// This modifier takes the styles prepared by the `computeStyles` modifier
+// and applies them to the HTMLElements such as popper and arrow
+function applyStyles(_ref) {
+  var state = _ref.state;
+  Object.keys(state.elements).forEach(function (name) {
+    var style = state.styles[name] || {};
+    var attributes = state.attributes[name] || {};
+    var element = state.elements[name]; // arrow is optional + virtual elements
+
+    if (!(0, _instanceOf.isHTMLElement)(element) || !(0, _getNodeName.default)(element)) {
+      return;
+    } // Flow doesn't support to extend this property, but it's the most
+    // effective way to apply styles to an HTMLElement
+    // $FlowFixMe[cannot-write]
+
+
+    Object.assign(element.style, style);
+    Object.keys(attributes).forEach(function (name) {
+      var value = attributes[name];
+
+      if (value === false) {
+        element.removeAttribute(name);
+      } else {
+        element.setAttribute(name, value === true ? '' : value);
+      }
+    });
+  });
+}
+
+function effect(_ref2) {
+  var state = _ref2.state;
+  var initialStyles = {
+    popper: {
+      position: state.options.strategy,
+      left: '0',
+      top: '0',
+      margin: '0'
+    },
+    arrow: {
+      position: 'absolute'
+    },
+    reference: {}
+  };
+  Object.assign(state.elements.popper.style, initialStyles.popper);
+  state.styles = initialStyles;
+
+  if (state.elements.arrow) {
+    Object.assign(state.elements.arrow.style, initialStyles.arrow);
+  }
+
+  return function () {
+    Object.keys(state.elements).forEach(function (name) {
+      var element = state.elements[name];
+      var attributes = state.attributes[name] || {};
+      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]); // Set all values to an empty string to unset them
+
+      var style = styleProperties.reduce(function (style, property) {
+        style[property] = '';
+        return style;
+      }, {}); // arrow is optional + virtual elements
+
+      if (!(0, _instanceOf.isHTMLElement)(element) || !(0, _getNodeName.default)(element)) {
+        return;
+      }
+
+      Object.assign(element.style, style);
+      Object.keys(attributes).forEach(function (attribute) {
+        element.removeAttribute(attribute);
+      });
+    });
+  };
+} // eslint-disable-next-line import/no-unused-modules
+
+
+var _default = {
+  name: 'applyStyles',
+  enabled: true,
+  phase: 'write',
+  fn: applyStyles,
+  effect: effect,
+  requires: ['computeStyles']
+};
+exports.default = _default;
+},{"../dom-utils/getNodeName.js":"../node_modules/@popperjs/core/lib/dom-utils/getNodeName.js","../dom-utils/instanceOf.js":"../node_modules/@popperjs/core/lib/dom-utils/instanceOf.js"}],"../node_modules/@popperjs/core/lib/modifiers/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "applyStyles", {
+  enumerable: true,
+  get: function () {
+    return _applyStyles.default;
+  }
+});
+Object.defineProperty(exports, "arrow", {
+  enumerable: true,
+  get: function () {
+    return _arrow.default;
+  }
+});
+Object.defineProperty(exports, "computeStyles", {
+  enumerable: true,
+  get: function () {
+    return _computeStyles.default;
+  }
+});
+Object.defineProperty(exports, "eventListeners", {
+  enumerable: true,
+  get: function () {
+    return _eventListeners.default;
+  }
+});
+Object.defineProperty(exports, "flip", {
+  enumerable: true,
+  get: function () {
+    return _flip.default;
+  }
+});
+Object.defineProperty(exports, "hide", {
+  enumerable: true,
+  get: function () {
+    return _hide.default;
+  }
+});
+Object.defineProperty(exports, "offset", {
+  enumerable: true,
+  get: function () {
+    return _offset.default;
+  }
+});
+Object.defineProperty(exports, "popperOffsets", {
+  enumerable: true,
+  get: function () {
+    return _popperOffsets.default;
+  }
+});
+Object.defineProperty(exports, "preventOverflow", {
+  enumerable: true,
+  get: function () {
+    return _preventOverflow.default;
+  }
+});
+
+var _applyStyles = _interopRequireDefault(require("./applyStyles.js"));
+
+var _arrow = _interopRequireDefault(require("./arrow.js"));
+
+var _computeStyles = _interopRequireDefault(require("./computeStyles.js"));
+
+var _eventListeners = _interopRequireDefault(require("./eventListeners.js"));
+
+var _flip = _interopRequireDefault(require("./flip.js"));
+
+var _hide = _interopRequireDefault(require("./hide.js"));
+
+var _offset = _interopRequireDefault(require("./offset.js"));
+
+var _popperOffsets = _interopRequireDefault(require("./popperOffsets.js"));
+
+var _preventOverflow = _interopRequireDefault(require("./preventOverflow.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./applyStyles.js":"../node_modules/@popperjs/core/lib/modifiers/applyStyles.js","./arrow.js":"../node_modules/@popperjs/core/lib/modifiers/arrow.js","./computeStyles.js":"../node_modules/@popperjs/core/lib/modifiers/computeStyles.js","./eventListeners.js":"../node_modules/@popperjs/core/lib/modifiers/eventListeners.js","./flip.js":"../node_modules/@popperjs/core/lib/modifiers/flip.js","./hide.js":"../node_modules/@popperjs/core/lib/modifiers/hide.js","./offset.js":"../node_modules/@popperjs/core/lib/modifiers/offset.js","./popperOffsets.js":"../node_modules/@popperjs/core/lib/modifiers/popperOffsets.js","./preventOverflow.js":"../node_modules/@popperjs/core/lib/modifiers/preventOverflow.js"}],"../node_modules/@popperjs/core/lib/popper-lite.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultModifiers = exports.createPopper = void 0;
+Object.defineProperty(exports, "detectOverflow", {
+  enumerable: true,
+  get: function () {
+    return _createPopper.detectOverflow;
+  }
+});
+Object.defineProperty(exports, "popperGenerator", {
+  enumerable: true,
+  get: function () {
+    return _createPopper.popperGenerator;
+  }
+});
+
+var _createPopper = require("./createPopper.js");
+
+var _eventListeners = _interopRequireDefault(require("./modifiers/eventListeners.js"));
+
+var _popperOffsets = _interopRequireDefault(require("./modifiers/popperOffsets.js"));
+
+var _computeStyles = _interopRequireDefault(require("./modifiers/computeStyles.js"));
+
+var _applyStyles = _interopRequireDefault(require("./modifiers/applyStyles.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var defaultModifiers = [_eventListeners.default, _popperOffsets.default, _computeStyles.default, _applyStyles.default];
+exports.defaultModifiers = defaultModifiers;
+var createPopper = /*#__PURE__*/(0, _createPopper.popperGenerator)({
+  defaultModifiers: defaultModifiers
+}); // eslint-disable-next-line import/no-unused-modules
+
+exports.createPopper = createPopper;
+},{"./createPopper.js":"../node_modules/@popperjs/core/lib/createPopper.js","./modifiers/eventListeners.js":"../node_modules/@popperjs/core/lib/modifiers/eventListeners.js","./modifiers/popperOffsets.js":"../node_modules/@popperjs/core/lib/modifiers/popperOffsets.js","./modifiers/computeStyles.js":"../node_modules/@popperjs/core/lib/modifiers/computeStyles.js","./modifiers/applyStyles.js":"../node_modules/@popperjs/core/lib/modifiers/applyStyles.js"}],"../node_modules/@popperjs/core/lib/popper.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  createPopper: true,
+  defaultModifiers: true,
+  popperGenerator: true,
+  detectOverflow: true,
+  createPopperLite: true
+};
+exports.createPopper = void 0;
+Object.defineProperty(exports, "createPopperLite", {
+  enumerable: true,
+  get: function () {
+    return _popperLite.createPopper;
+  }
+});
+exports.defaultModifiers = void 0;
+Object.defineProperty(exports, "detectOverflow", {
+  enumerable: true,
+  get: function () {
+    return _createPopper.detectOverflow;
+  }
+});
+Object.defineProperty(exports, "popperGenerator", {
+  enumerable: true,
+  get: function () {
+    return _createPopper.popperGenerator;
+  }
+});
+
+var _createPopper = require("./createPopper.js");
+
+var _eventListeners = _interopRequireDefault(require("./modifiers/eventListeners.js"));
+
+var _popperOffsets = _interopRequireDefault(require("./modifiers/popperOffsets.js"));
+
+var _computeStyles = _interopRequireDefault(require("./modifiers/computeStyles.js"));
+
+var _applyStyles = _interopRequireDefault(require("./modifiers/applyStyles.js"));
+
+var _offset = _interopRequireDefault(require("./modifiers/offset.js"));
+
+var _flip = _interopRequireDefault(require("./modifiers/flip.js"));
+
+var _preventOverflow = _interopRequireDefault(require("./modifiers/preventOverflow.js"));
+
+var _arrow = _interopRequireDefault(require("./modifiers/arrow.js"));
+
+var _hide = _interopRequireDefault(require("./modifiers/hide.js"));
+
+var _popperLite = require("./popper-lite.js");
+
+var _index = require("./modifiers/index.js");
+
+Object.keys(_index).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _index[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _index[key];
+    }
+  });
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var defaultModifiers = [_eventListeners.default, _popperOffsets.default, _computeStyles.default, _applyStyles.default, _offset.default, _flip.default, _preventOverflow.default, _arrow.default, _hide.default];
+exports.defaultModifiers = defaultModifiers;
+var createPopper = /*#__PURE__*/(0, _createPopper.popperGenerator)({
+  defaultModifiers: defaultModifiers
+}); // eslint-disable-next-line import/no-unused-modules
+
+exports.createPopper = createPopper;
+},{"./createPopper.js":"../node_modules/@popperjs/core/lib/createPopper.js","./modifiers/eventListeners.js":"../node_modules/@popperjs/core/lib/modifiers/eventListeners.js","./modifiers/popperOffsets.js":"../node_modules/@popperjs/core/lib/modifiers/popperOffsets.js","./modifiers/computeStyles.js":"../node_modules/@popperjs/core/lib/modifiers/computeStyles.js","./modifiers/applyStyles.js":"../node_modules/@popperjs/core/lib/modifiers/applyStyles.js","./modifiers/offset.js":"../node_modules/@popperjs/core/lib/modifiers/offset.js","./modifiers/flip.js":"../node_modules/@popperjs/core/lib/modifiers/flip.js","./modifiers/preventOverflow.js":"../node_modules/@popperjs/core/lib/modifiers/preventOverflow.js","./modifiers/arrow.js":"../node_modules/@popperjs/core/lib/modifiers/arrow.js","./modifiers/hide.js":"../node_modules/@popperjs/core/lib/modifiers/hide.js","./popper-lite.js":"../node_modules/@popperjs/core/lib/popper-lite.js","./modifiers/index.js":"../node_modules/@popperjs/core/lib/modifiers/index.js"}],"../node_modules/@popperjs/core/lib/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _exportNames = {
+  popperGenerator: true,
+  detectOverflow: true,
+  createPopperBase: true,
+  createPopper: true,
+  createPopperLite: true
+};
+Object.defineProperty(exports, "createPopper", {
+  enumerable: true,
+  get: function () {
+    return _popper.createPopper;
+  }
+});
+Object.defineProperty(exports, "createPopperBase", {
+  enumerable: true,
+  get: function () {
+    return _createPopper.createPopper;
+  }
+});
+Object.defineProperty(exports, "createPopperLite", {
+  enumerable: true,
+  get: function () {
+    return _popperLite.createPopper;
+  }
+});
+Object.defineProperty(exports, "detectOverflow", {
+  enumerable: true,
+  get: function () {
+    return _createPopper.detectOverflow;
+  }
+});
+Object.defineProperty(exports, "popperGenerator", {
+  enumerable: true,
+  get: function () {
+    return _createPopper.popperGenerator;
+  }
+});
+
+var _enums = require("./enums.js");
+
+Object.keys(_enums).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _enums[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _enums[key];
+    }
+  });
+});
+
+var _index = require("./modifiers/index.js");
+
+Object.keys(_index).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+  if (key in exports && exports[key] === _index[key]) return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function () {
+      return _index[key];
+    }
+  });
+});
+
+var _createPopper = require("./createPopper.js");
+
+var _popper = require("./popper.js");
+
+var _popperLite = require("./popper-lite.js");
+},{"./enums.js":"../node_modules/@popperjs/core/lib/enums.js","./modifiers/index.js":"../node_modules/@popperjs/core/lib/modifiers/index.js","./createPopper.js":"../node_modules/@popperjs/core/lib/createPopper.js","./popper.js":"../node_modules/@popperjs/core/lib/popper.js","./popper-lite.js":"../node_modules/@popperjs/core/lib/popper-lite.js"}],"Frontend/Pages/Details/Details.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -99928,6 +100384,10 @@ var _axios = _interopRequireDefault(require("axios"));
 var _Modal = _interopRequireDefault(require("../../Modal/Modal"));
 
 var _context = require("../../../Context/context");
+
+var _reactJwt = require("react-jwt");
+
+var _core = require("@popperjs/core");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -99952,12 +100412,22 @@ const Details = props => {
     let s = window.location.href;
 
     if (s.indexOf('?') === -1) {
-      window.location.replace('/');
+      window.location.pathname = '/';
+    }
+
+    if (localStorage.getItem("email") !== null) {
+      window.location.pathname = "/home";
     }
 
     let temp = values.formData;
     let s1 = window.location.href.split("?")[1];
-    temp.email = s1.substring(0, s1.length - 1);
+
+    if ((0, _reactJwt.isExpired)(s1.substring(0, s1.length - 1))) {
+      window.location.pathname = '/';
+    }
+
+    const decoded = (0, _reactJwt.decodeToken)(s1.substring(0, s1.length - 1));
+    temp.email = decoded.email;
     setValues({ ...values,
       formData: temp
     });
@@ -100200,7 +100670,7 @@ const Details = props => {
 
 var _default = Details;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../Modal/Modal":"Frontend/Modal/Modal.js","../../../Context/context":"Context/context.js"}],"../node_modules/prefix-style/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","axios":"../node_modules/axios/index.js","../../Modal/Modal":"Frontend/Modal/Modal.js","../../../Context/context":"Context/context.js","react-jwt":"../node_modules/react-jwt/dist/index.modern.js","@popperjs/core":"../node_modules/@popperjs/core/lib/index.js"}],"../node_modules/prefix-style/index.js":[function(require,module,exports) {
 var div = null
 var prefixes = [ 'Webkit', 'Moz', 'O', 'ms' ]
 

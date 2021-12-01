@@ -11,7 +11,7 @@ import { Context } from '../../../Context/context';
 const Election = (props) => {
     const context = useContext(Context);
     
-    if(localStorage.getItem("email") === undefined) {
+    if(localStorage.getItem("email") === null) {
         window.location.pathname = "/";
     } else {
         if(window.accountId === '') {

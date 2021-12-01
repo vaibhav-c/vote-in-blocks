@@ -17,7 +17,10 @@ router.get('/auth/google/callback',
   passport.authenticate('google'),
   function(req, res) {
       if(req.user.aadhar === "undefined") {
-        res.redirect(`${process.env.CLIENT_URL}/details?${req.user.email}`)
+        const token = jwt.sign({
+            email: req.user.email,
+        }, process.env.SECRET, {expiresIn: 50000})
+        res.redirect(`${process.env.CLIENT_URL}/details?${token}`)
       } else {
         console.log(req)
         const token = jwt.sign({
@@ -198,7 +201,7 @@ router.get('/votingelection',async(req,res)=>{
 })
 
 router.put('/update',async(req,res)=>{
-    const { ID } = req.body
+    const { id } = req.body
     let Found = await Vote.findOneAndUpdate({
         _id: ID
     },{resultsDeclared: true},{new:true})

@@ -16,12 +16,21 @@ const Home = (props) => {
         if(s.indexOf("?") !== -1) {
             const token = s.split("?")[1];
             const decoded = decodeToken(token.substring(0, token.length - 1));
-            //console.log(decoded);
+            console.log(decoded);
             //set user
-            if(localStorage.getItem("email") === undefined && isExpired(token.substring(0, token.length - 1))) {
-                window.location.href = "/";
+            if(localStorage.getItem("email") === null && isExpired(token.substring(0, token.length - 1))) {
+                window.location.pathname = "/";
             }
             context.setUser({id: decoded.id, email: decoded.email, dateOfBirth: decoded.dateOfBirth, name: decoded.name, aadhar: decoded.aadhar});
+        } else {
+            if(localStorage.getItem("email") === null) {
+                window.location.pathname = "/";
+            } else {
+                if(window.accountId === '') {
+                    console.log("login");
+                    login()
+                }
+            }
         }
     }, []);
 
@@ -50,12 +59,12 @@ const Home = (props) => {
             </Container>
             <div style = {{display: 'flex', marginTop: '20px'}}>
                 <div className= "col">
-                    <Card style={{ width: '18rem', margin: 'auto', backgroundColor: 'darkblue', color: 'white'}}>
+                    <Card style={{ width: '18rem', margin: 'auto', height: '15rem', backgroundColor: 'darkblue', color: 'white'}}>
                         <Card.Body>
-                            <Card.Title>Elections Conducted</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted" style = {{color: 'wheat'}}>Organizer</Card.Subtitle>
+                            <Card.Title>Total Elections Conducted</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted" style = {{color: 'wheat'}}>Organized by Voting App</Card.Subtitle>
                             <Card.Text>
-                                You have conducted these elections using the app.
+                                Elections conducted of the users, for the users and by the users.
                             </Card.Text>
                         </Card.Body>
                         <div className="numbers">
@@ -72,12 +81,34 @@ const Home = (props) => {
                     </Card>
                 </div>
                 <div className= "col">
-                    <Card style={{ width: '18rem', margin: 'auto', backgroundColor: 'darkblue', color: 'white' }}>
+                    <Card style={{ width: '18rem', margin: 'auto', height: '15rem', backgroundColor: 'darkblue', color: 'white'}}>
                         <Card.Body>
-                            <Card.Title>Elections Voted</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">You've Voted</Card.Subtitle>
+                            <Card.Title>Elections You Conducted</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted" style = {{color: 'wheat'}}>Organized by You</Card.Subtitle>
                             <Card.Text>
-                                You have voted in these elections. You can't vote again.
+                                You have conducted these elections. You can check them out at the conducted elections page. 
+                            </Card.Text>
+                        </Card.Body>
+                        <div className="numbers">
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">1</span>
+                            </span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">2</span>
+                            </span>
+                            <span className="numbers__window">
+                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">3</span>
+                            </span>
+                        </div>
+                    </Card>
+                </div>
+                <div className= "col">
+                    <Card style={{ width: '18rem', margin: 'auto', height: '15rem', backgroundColor: 'darkblue', color: 'white' }}>
+                        <Card.Body>
+                            <Card.Title>Elections Invited</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted">Cast your Vote</Card.Subtitle>
+                            <Card.Text>
+                                Cast a vote in the vote section for all the live elections you are invited for.
                             </Card.Text>
                         </Card.Body>
                         <div className="numbers">
@@ -94,12 +125,12 @@ const Home = (props) => {
                     </Card>
                 </div>
                 <div className= "col">
-                    <Card style={{ width: '18rem', margin: 'auto', backgroundColor: 'darkblue', color: 'white' }}>
+                    <Card style={{ width: '18rem', margin: 'auto', height: '15rem', backgroundColor: 'darkblue', color: 'white' }}>
                         <Card.Body>
                             <Card.Title>Ongoing Elections</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">You're Invited</Card.Subtitle>
+                            <Card.Subtitle className="mb-2 text-muted">Organized by Voting App</Card.Subtitle>
                             <Card.Text>
-                                Vote in the given elections where you are invited to vote.
+                                These many elections are live on our app. You can also conduct one by going to conduct page.
                             </Card.Text>
                         </Card.Body>
                         <div className="numbers">

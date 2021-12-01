@@ -2,6 +2,8 @@ import React, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
 import CustomModal from '../../Modal/Modal';
 import { Context } from '../../../Context/context';
+import { isExpired, decodeToken } from "react-jwt";
+import { computeStyles } from '@popperjs/core';
 
 
 const Details = (props) => {
@@ -22,11 +24,18 @@ const Details = (props) => {
     useEffect(() => {
         let s = window.location.href
         if(s.indexOf('?') === -1) {
-            window.location.replace('/');
+            window.location.pathname = '/';
+        }
+        if(localStorage.getItem("email") !== null) {
+            window.location.pathname = "/home";
         }
         let temp = values.formData;
         let s1 = window.location.href.split("?")[1];
-        temp.email = s1.substring(0, s1.length - 1);
+        if(isExpired(s1.substring(0, s1.length - 1))) {
+            window.location.pathname = '/';
+        }
+        const decoded = decodeToken(s1.substring(0, s1.length - 1));
+        temp.email = decoded.email;
         setValues({
             ...values,
             formData: temp

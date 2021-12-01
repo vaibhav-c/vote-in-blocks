@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const Results = (props) => {
 
-    if(localStorage.getItem("email") === undefined) {
+    if(localStorage.getItem("email") === null) {
         window.location.pathname = "/";
     } else {
         if(window.accountId === '') {
@@ -46,15 +46,17 @@ const Results = (props) => {
 
     let fetched;
     let fetchedCandidates;
+    let n = 0;
     if(Object.keys(values.electionList).length !== 0) {
         fetchedCandidates = (
             values.electionList.map((election) => {
                 if(election.resultsDeclared) {
+                    n++;
                     return (
                         <Tab.Pane key = {election.name} eventKey={"#" + election.name}>
                             {
                             election.candidateDetails.map((candidate) => {
-                                return (<ResultsCard name = {candidate.name} url = {candidate.url} number = {candidate.number} candidateID = "ppp"/>);
+                                return (<ResultsCard name = {candidate.name} url = {candidate.url} candidateId = {candidate._id}/>);
                             })
                             } 
                         </Tab.Pane>
@@ -73,9 +75,20 @@ const Results = (props) => {
                     );
                 }
         }));
-    } else {
-        fetched = <></>
-        fetchedCandidates = <></>
+    }
+    if(n == 0){
+        fetched = (<ListGroup.Item key = "none" action href="#none">
+                        Nothing to Show
+                    </ListGroup.Item>)
+        fetchedCandidates = (
+            <Tab.Pane key = "none" eventKey="#none">
+                <Card style={{ width: '100%', backgroundColor: "white" }} >
+                    <Card.Body style = {{display: 'flex', width: '100%'}}>
+                        You haven't been invited to vote in any election the results of which are declared so nothing to show
+                    </Card.Body>
+                </Card>
+            </Tab.Pane>
+        )
     }
 
 

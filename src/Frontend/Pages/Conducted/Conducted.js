@@ -56,10 +56,10 @@ const Vote = (props) => {
     if(Object.keys(values.electionList).length !== 0) {
         console.log(values.electionList);
         fetched = values.electionList.map((election) => {
-                        let status = (currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1 ? "Ongoing" : (currentTime.localeCompare(election.startTime) === -1)? "Not Started" : "Finished");
+                        let status = (currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1 ? "Ongoing" : (currentTime.localeCompare(election.startTime) === -1)? "Future" : "Finished");
                         return (
                             <Tab.Pane style = {{marginBottom: '15px'}} key = {election.id} eventKey="#">
-                                <ConductedCard name = {election.name} declared = {election.declared} status = {status} startTime = {election.startTime} endTime = {election.endTime}/>
+                                <ConductedCard election = {election} status = {status}/>
                             </Tab.Pane>
                         );
                     });

@@ -4,11 +4,12 @@ import {Navbar, Container, Nav} from 'react-bootstrap';
 const Menubar = (props) => {
 
     const moveToGiven = (given) => {
-        window.location.href = "http://localhost:1234/" + given;
+        window.location.href = given;
     }
 
     const logout = () => {
-        
+        localStorage.clear();
+        window.location.href = "/";
     }
 
     return (
