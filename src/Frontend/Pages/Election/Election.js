@@ -168,8 +168,8 @@ const Election = (props) => {
                     for(let i = 0; i < Object.keys(res.data.candidateDetails).length; i++) {
                         candidateIds.push(res.data.candidateDetails[i]._id);
                     }
-                    console.log(candidateIds)
-                    window.contract.setUpElection({electionId: res.data.id, candidateIds: candidateIds})
+                    console.log(res.data.id);
+                    window.contract.setUpElection({electionId: res.data.id, candidateIds: candidateIds});
                     setValues({
                         ...values,
                         position: 1,
@@ -248,15 +248,15 @@ const Election = (props) => {
                                                     values.election.candidateDetails.map((candidate) => {
                                                         val = val + 1;
                                                         return (
-                                                            <div>
+                                                            <div key = {val}>
                                                                 <h5 className="card-title text-center mb-5 fw-light fs-5">Candidate {val}</h5>
                                                                 <div className="form-floating mb-3">
                                                                     <input type="text" name = {"name " + val} className="form-control" id="floatingInput" placeholder="Name of Election" onChange = {onChangeCandidate} value = {values.election.candidateDetails[val - 1].name}></input>
-                                                                    <label for="floatingInput">Candidate Name</label>
+                                                                    <label htmlFor="floatingInput">Candidate Name</label>
                                                                 </div>
                                                                 <div className="form-floating mb-3">
                                                                     <input type="text" name = {"url " + val} className="form-control" id="floatingInput" placeholder="Description" onChange = {onChangeCandidate} value = {values.election.candidateDetails[val - 1].url}></input>
-                                                                    <label for="floatingInput">Election Symbol URL</label>
+                                                                    <label htmlFor="floatingInput">Election Symbol URL</label>
                                                                 </div>
                                                             </div>
                                                         );
@@ -284,7 +284,7 @@ const Election = (props) => {
                                             {values.election.candidateDetails.map((candidate) => {
                                                 return (
                                                     <Card style={{ width: '18rem' }}>
-                                                        <Card.Img variant="top" src={candidate.url} />
+                                                        <Card.Img variant="top" src={candidate.url} style = {{height: '200px'}} />
                                                         <Card.Body>
                                                             <Card.Title>{candidate.name}</Card.Title>
                                                         </Card.Body>

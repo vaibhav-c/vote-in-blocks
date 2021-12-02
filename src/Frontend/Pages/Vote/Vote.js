@@ -5,11 +5,13 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import VoteCard from '../../Components/Vote Card/Vote Card';
 import { login, logout } from "../../../utils";
 import axios from 'axios';
+import Election from '../../Components/Election Card/Election Card';
 
 const Vote = (props) => {
 
     const [values, setValues] = useState({
-        electionList: []
+        electionList: [],
+        current: ''
     })
 
     if(localStorage.getItem("email") === null) {
@@ -24,6 +26,14 @@ const Vote = (props) => {
     let email = localStorage.getItem("email");
     let id = localStorage.getItem("id");
 
+    const changeCurrent = (election) => {
+        setValues({
+            ...values,
+            current: election
+        });
+        console.log(values);
+    }
+
     useEffect(() => {
         axios.get(`http://localhost:5000/api/votingelection`,{
                 params: {
@@ -31,9 +41,19 @@ const Vote = (props) => {
                 }
             }).then((res)=>{
                 if(res.data.success) {
+                    let currentTime = new Date().toISOString();
+                    let elections = res.data.conducted;
+                    let finalElection = []
+                    elections.map((election) =>{
+                        if(currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1) {
+                            finalElection.push(election);
+                        }
+                    });
+                    
                     setValues({
                         ...values,
-                        electionList: res.data.conducted
+                        electionList: finalElection,
+                        current: finalElection[0]
                     });
                     console.log(res.data.conducted)
                 } else {
@@ -45,71 +65,6 @@ const Vote = (props) => {
             })
     }, []);
     
-    let fetched;
-    let fetchedCandidates;
-    let currentTime = new Date().toISOString();
-    let n = 0;
-
-    if(Object.keys(values.electionList).length !== 0) {
-        fetchedCandidates = (
-            values.electionList.map((election) => {
-                if(currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1) {
-                    return (
-                        <Tab.Pane key = {election.name} eventKey={"#" + election.name}>
-                            {
-                            election.candidateDetails.map((candidate) => {
-                                return (<VoteCard name = {candidate.name} url = {candidate.url} userId = {id} electionId = {election._id} candidateId = {candidate._id}/>);
-                            })
-                            } 
-                        </Tab.Pane>
-                    );
-                }
-            })
-        )
-
-        fetched = (
-            values.electionList.map((election) => {
-                if(currentTime.localeCompare(election.startTime) === 1 && currentTime.localeCompare(election.endTime) === -1) {
-                    n++;
-                    return (
-                        <ListGroup.Item key = {election.name} action href={"#" + election.name}>
-                            {election.name}
-                        </ListGroup.Item>
-                    );
-
-                }
-        }));
-    } else {
-        fetched = (<ListGroup.Item key = "none" action href="#none">
-                        Nothing to Show
-                    </ListGroup.Item>)
-        fetchedCandidates = (
-            <Tab.Pane key = "none" eventKey="#none">
-                <Card style={{ width: '100%', backgroundColor: "white" }} >
-                    <Card.Body style = {{display: 'flex', width: '100%'}}>
-                        You haven't been invited to vote in any elections
-                    </Card.Body>
-                </Card>
-            </Tab.Pane>
-        )
-    }
-
-    if(n === 0) {
-        fetched = (<ListGroup.Item key = "none" action href="#none">
-                        Nothing to Show
-                    </ListGroup.Item>)
-        fetchedCandidates = (
-            <Tab.Pane key = "none" eventKey="#none">
-                <Card style={{ width: '100%', backgroundColor: "white" }} >
-                    <Card.Body style = {{display: 'flex', width: '100%'}}>
-                        You haven't been invited to vote in any elections
-                    </Card.Body>
-                </Card>
-            </Tab.Pane>
-        )
-    }
-
-    
     return (
         <>
             <Menubar/>
@@ -117,23 +72,31 @@ const Vote = (props) => {
                 <Row style = {{marginTop: '20px'}}>
                     <Col sm={4}>
                     <ListGroup>
-                        {
-                            fetched
-                        }
+                        {Object.keys(values.electionList).length !== 0? (
+                            values.electionList.map((election) => {
+                                return (
+                                    <ListGroup.Item key = {election._id} action href={"#"+election._id} onClick = {() => changeCurrent(election)}>
+                                        {election.name}
+                                    </ListGroup.Item>
+                                )
+                            })) : (
+                            <ListGroup.Item key = "none" action href="#none">
+                                Nothing to Show
+                            </ListGroup.Item>
+                        )}
                     </ListGroup>
                     </Col>
                     <Col sm={8}>
                     <Tab.Content>
-                        {
-                            fetchedCandidates
-                        }
-                        <Tab.Pane eventKey="#linkinit">
-                            <Card style={{ width: '100%' }}>
-                                <Card.Body style = {{display: 'flex', width: '100%'}}>
-                                    <Card.Title style = {{marginLeft: '20px'}}>Select from the list of ongoing elections and click on the Vote Button to Vote.</Card.Title>
-                                </Card.Body>
-                            </Card>
-                        </Tab.Pane>
+                        {Object.keys(values.electionList).length !== 0 ? <Election election = {values.current}/> : (
+                            <Tab.Pane key = "none" eventKey="#none">
+                                <Card style={{ width: '100%', backgroundColor: "white" }} >
+                                    <Card.Body style = {{display: 'flex', width: '100%'}}>
+                                        You haven't been invited to vote in any elections
+                                    </Card.Body>
+                                </Card>
+                            </Tab.Pane>
+                        )}
                     </Tab.Content>
                     </Col>
                 </Row>

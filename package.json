@@ -41,6 +41,7 @@
     "filepond": "^4.30.3",
     "filepond-plugin-image-preview": "^4.6.10",
     "http-proxy-middleware": "^2.0.1",
+    "js-base64": "^3.7.2",
     "mdbreact": "^5.1.0",
     "near-api-js": "~0.41.0",
     "react": "^17.0.2",

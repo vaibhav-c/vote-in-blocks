@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Menubar from '../../Components/Menubar/Menubar';
 import {Card, Container, Button} from 'react-bootstrap';
 import Carousel from 'react-elastic-carousel';
@@ -9,7 +9,6 @@ import './Home.css';
 const Home = (props) => {
 
     const context = useContext(Context);
-    
 
     useEffect(() => {
         let s = window.location.href;
@@ -34,13 +33,17 @@ const Home = (props) => {
         }
     }, []);
 
+    const [values, setValues] = useState({
+        totalElections: ['1', '2', '3', '4'],
+        electionConducted: ['1'],
+        ongoingElection: ['2', '3'],
+        electionInvited: ['5', '6', '7', '8', '9']
+    });
 
-    let ongoingElection = 0;
-    let votedElection = 0;
-    let electionConducted = 0;
     useEffect(() => {
-        
-    }, []);
+        //get all data from mongo db
+        //convert to string and split and setValues
+    }, [])
 
     return (
         <>
@@ -48,7 +51,7 @@ const Home = (props) => {
             <Container>
                 <Card style={{ width: '100%', marginTop: '30px', marginBottom: '80px', height: '100%', display: 'flex', backgroundColor: "black"}}>
                     <Card.Body style = {{width: '100%'}}>
-                        <Card.Img variant="top" style = {{borderRadius: '50%', overflow: 'hidden', float: 'right', height: '100px', width: '100px'}} src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTL8c4Os_HcIVhcyJZno7LiC6YXxR5fHTlcEAcTffa7-vQqVoMv3g7t_DsQ8i2qmEIoU3M&usqp=CAU' />
+                        <Card.Img variant="top" style = {{borderRadius: '50%', overflow: 'hidden', float: 'right', height: '100px', width: '100px'}} src='https://eci.gov.in/uploads/monthly_2018_09/eci200x200.png.0b64512a61d9374ccebae62e674b8879.png' />
                         <Card.Title style = {{marginLeft: '20px'}}></Card.Title>
                         <Card.Img variant="top" style = {{overflow: 'hidden', float: 'left', height: '200px', width: '300px', marginRight: '20px'}} src='https://images1.livehindustan.com/uploadimage/library/2021/07/02/16_9/16_9_6/aadhar_card__1625226505.jpg'></Card.Img>
                         <Card.Title style = {{marginLeft: '10px', marginBottom: '20px', marginTop: '30px'}}><span style = {{color: 'orange'}}>Email: {localStorage.getItem("email")}</span></Card.Title>
@@ -68,15 +71,15 @@ const Home = (props) => {
                             </Card.Text>
                         </Card.Body>
                         <div className="numbers">
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">{electionConducted / 100}</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">{(electionConducted % 100) / 10}</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">{electionConducted % 10}</span>
-                            </span>
+                            {
+                                values.totalElections.map((c) => {
+                                    return (
+                                        <span className="numbers__window">
+                                            <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">{c}</span>
+                                        </span>
+                                    );
+                                })
+                            }
                         </div>
                     </Card>
                 </div>
@@ -90,15 +93,15 @@ const Home = (props) => {
                             </Card.Text>
                         </Card.Body>
                         <div className="numbers">
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">1</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">2</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">3</span>
-                            </span>
+                            {
+                                values.electionConducted.map((c) => {
+                                    return (
+                                        <span className="numbers__window">
+                                            <span className="numbers__window__digit numbers__window__digit--2" data-fake="8642519073">{c}</span>
+                                        </span>
+                                    );
+                                })
+                            }
                         </div>
                     </Card>
                 </div>
@@ -112,15 +115,15 @@ const Home = (props) => {
                             </Card.Text>
                         </Card.Body>
                         <div className="numbers">
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">{votedElection / 100}</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">{(votedElection % 100) / 10}</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">{votedElection % 10}</span>
-                            </span>
+                            {
+                                values.electionInvited.map((c) => {
+                                    return (
+                                        <span className="numbers__window">
+                                            <span className="numbers__window__digit numbers__window__digit--3" data-fake="8642519073">{c}</span>
+                                        </span>
+                                    );
+                                })
+                            }
                         </div>
                     </Card>
                 </div>
@@ -134,15 +137,15 @@ const Home = (props) => {
                             </Card.Text>
                         </Card.Body>
                         <div className="numbers">
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--1" data-fake="8642519073">{ongoingElection / 100}</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--2" data-fake="5207186394">{(ongoingElection % 100) / 10}</span>
-                            </span>
-                            <span className="numbers__window">
-                                <span className="numbers__window__digit numbers__window__digit--3" data-fake="8395216407">{ongoingElection % 10}</span>
-                            </span>
+                            {
+                                values.ongoingElection.map((c) => {
+                                    return (
+                                        <span className="numbers__window">
+                                            <span className="numbers__window__digit numbers__window__digit--4" data-fake="8642519073">{c}</span>
+                                        </span>
+                                    );
+                                })
+                            }
                         </div>
                     </Card>
                 </div>

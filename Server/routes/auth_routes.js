@@ -156,7 +156,7 @@ router.post('/voting',async(req,res)=>{
     })
     console.log(candidateDetails);
 
-    var mailOptions = {
+    /*var mailOptions = {
         from: process.env.email,
         to: invites,
         subject: 'Invites',
@@ -171,7 +171,7 @@ router.post('/voting',async(req,res)=>{
         } else {
           console.log('Email sent: ' + info.response);
         }
-    });
+    });*/
 
     vote.save((err) => {
         if (err) {
@@ -228,8 +228,9 @@ router.get('/votingelection',async(req,res)=>{
 
 router.put('/update',async(req,res)=>{
     const { id } = req.body
+    console.log(req);
     let Found = await Vote.findOneAndUpdate({
-        _id: ID
+        _id: id
     },{resultsDeclared: true},{new:true})
 
     if(Found)

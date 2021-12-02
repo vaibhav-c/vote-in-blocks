@@ -24,24 +24,23 @@ let voted = new PersistentUnorderedMap<string, string[]>("userVotedElection");
 
 
 
-export function getResults(candidateIds: string): u64  {
-
-  return candidates.getSome(candidateIds);
-
+export function getResults(candidateId: string): u64  {
+  logging.log(candidates.getSome(candidateId));
+  return candidates.getSome(candidateId);
 }
 
-export function getParticipation(electionId: string, userID: string): bool  {
-
-  if (voted.contains(electionId))
-    return voted.getSome(electionId).includes(userID);
-  else
+export function getParticipation(electionId: string, userId: string): bool  {
+  if (voted.contains(electionId)) {
+    return voted.getSome(electionId).includes(userId);
+  } else {
     return false;
-
+  }
 }
 
 
 
 export function setUpElection(electionId: string, candidateIds:string[]):void{
+  logging.log('here');
   for(let i = 0; i < candidateIds.length; i++) {
     elections.set(candidateIds[i], electionId);
     candidates.set(candidateIds[i], 0);
@@ -51,6 +50,7 @@ export function setUpElection(electionId: string, candidateIds:string[]):void{
 }
 
 export function sendVote(electionId: string, candidateId: string, userId: string):void{
+  logging.log('here');
   if(elections.contains(candidateId)) {
     logging.log(`${elections.getSome(candidateId)}`)
     if(elections.getSome(candidateId) == electionId) {

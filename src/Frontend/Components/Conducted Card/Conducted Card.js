@@ -1,27 +1,53 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
+import ResultsCard from '../Result Card/Result Card';
+import axios from 'axios';
 
 const Conducted = (props) => {
     const [values, setValues] = useState({
        showResult: false,
-       candidateResults: [] 
+       candidateResults: []
     });
+
+
+    useEffect(() => {
+        let arr = [];
+        props.election.candidateDetails.forEach(element => {
+            let c = {
+                name: element.name,
+                votes: 0,
+                url: element.url,
+                id: element._id
+            }
+            window.contract.getResults({candidateId: c.id})
+                .then((res) => {
+                    c.votes = res;
+                    arr.push(c);
+                });                     
+        });
+        arr.sort(function(a, b) {
+            var x = a.votes;
+            var y = b.votes;
+            return ((x < y) ? -1: ((x > y) ? 1: 0));
+        });
+        console.log(arr);
+        setValues({
+            ...values,
+            candidateResults: arr
+        })
+    }, [])
+
     const showResult = (event) => {
         event.preventDefault();
-        for(let i in props.election.candidateDetails) {
-            let c = {
-                name: '',
-                votes: 0,
-                url: ''
-            }
-            c.name = i.name;
-            c.url = i.url;
-            c.votes = window.contract.getResults({candidateId: i._id});
-        }
+        let result = values.showResult;    
+        setValues({
+            ...values,
+            showResult: !result
+        })
     }
     const declareResult = (event) => {
         event.preventDefault();
-        axios.post(`/update`, {
+        axios.put(`http://localhost:5000/api/update`, {
             id: props.election._id
         }).then((res) => {
             if(res.data.success) {
@@ -32,10 +58,11 @@ const Conducted = (props) => {
             }
         })
     }
+    let val = 0;
     return (
         <Card style={{ width: '100%' }}>
             <Card.Body style = {{display: 'flex', width: '100%'}}>
-                <Button variant="success" disabled = {(props.status === "Ongoing" || props.status === "Future" || props.election.resultsDeclared) ? true : false} style = {{marginRight: '20px'}} onClick = {showResult}>Show Results</Button>
+                <Button variant="success" disabled = {(props.status === "Ongoing" || props.status === "Future") ? true : false} style = {{marginRight: '20px'}} onClick = {showResult}>Show Results</Button>
                 <Button variant="success" disabled = {(props.status === "Ongoing" || props.status === "Future" || props.election.resultsDeclared) ? true : false} style = {{marginRight: '20px'}} onClick = {declareResult}>Delcare Results</Button>
                 <Button variant={props.status === "Ongoing"? "warning": props.status === "Future"? "secondary":"danger"} style = {{marginRight: '20px', width: '100px'}}>{props.status}</Button>
                 <Button variant="outline-primary" style = {{marginRight: '20px',  width: '200px'}}>{props.election.startTime.split("T")[0] + " " + props.election.startTime.split("T")[1].substring(0, 5)}</Button>
@@ -45,9 +72,18 @@ const Conducted = (props) => {
             </Card.Body>
             {
                     values.showResult? 
-                    (<Card.Body style = {{display: 'flex', width: '100%'}}>
-                        Party and Vote
-                        Voted
+                    (<Card.Body style = {{display: 'block', width: '100%'}}>
+                        {
+                            Object.keys(values.candidateResults).length !== 0 ? (
+                                values.candidateResults.map((candidate) => {
+                                    val++;
+                                    return (<ResultsCard position = {val} id = {candidate.id} votes = {candidate.votes} name = {candidate.name} url = {candidate.url}/>);
+                                })
+                            ):(
+                                <div>No Data Available</div>
+                            )
+
+                        }
                     </Card.Body>) : <div/>
             }
         </Card>
