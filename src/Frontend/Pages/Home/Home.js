@@ -43,6 +43,8 @@ const Home = (props) => {
     useEffect(() => {
         //get all data from mongo db
         //convert to string and split and setValues
+        let currentTime = new Date().toISOString();
+        let email = localStorage.getItem("email");
     }, [])
 
     return (
@@ -53,7 +55,7 @@ const Home = (props) => {
                     <Card.Body style = {{width: '100%'}}>
                         <Card.Img variant="top" style = {{borderRadius: '50%', overflow: 'hidden', float: 'right', height: '100px', width: '100px'}} src='https://eci.gov.in/uploads/monthly_2018_09/eci200x200.png.0b64512a61d9374ccebae62e674b8879.png' />
                         <Card.Title style = {{marginLeft: '20px'}}></Card.Title>
-                        <Card.Img variant="top" style = {{overflow: 'hidden', float: 'left', height: '200px', width: '300px', marginRight: '20px'}} src='https://images1.livehindustan.com/uploadimage/library/2021/07/02/16_9/16_9_6/aadhar_card__1625226505.jpg'></Card.Img>
+                        <Card.Img variant="top" style = {{overflow: 'hidden', float: 'left', height: '200px', width: '300px', marginRight: '20px'}} src='https://eci.gov.in/uploads/monthly_2018_09/eci200x200.png.0b64512a61d9374ccebae62e674b8879.png'></Card.Img>
                         <Card.Title style = {{marginLeft: '10px', marginBottom: '20px', marginTop: '30px'}}><span style = {{color: 'orange'}}>Email: {localStorage.getItem("email")}</span></Card.Title>
                         <Card.Title style = {{marginLeft: '10px', marginBottom: '20px'}}><span style = {{color: 'white'}}>Name: {localStorage.getItem("name")}</span></Card.Title>
                         <Card.Title style = {{marginLeft: '10px', marginBottom: '20px'}}><span style = {{color: 'green'}}>AADHAR No: {localStorage.getItem("aadhar")}</span></Card.Title>

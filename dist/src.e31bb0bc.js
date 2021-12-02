@@ -51668,6 +51668,34 @@ const Menubar = props => {
 
 var _default = Menubar;
 exports.default = _default;
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"Frontend/Modal/Modal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _reactBootstrap = require("react-bootstrap");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+const CustomModal = props => {
+  return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal, _extends({}, props, {
+    size: "lg",
+    "aria-labelledby": "contained-modal-title-vcenter",
+    centered: true
+  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Header, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Title, {
+    id: "contained-modal-title-vcenter"
+  }, props.title)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Body, null, /*#__PURE__*/_react.default.createElement("p", null, props.message)));
+};
+
+var _default = CustomModal;
+exports.default = _default;
 },{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"Frontend/Components/Vote Card/Vote Card.js":[function(require,module,exports) {
 "use strict";
 
@@ -51680,13 +51708,18 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _reactBootstrap = require("react-bootstrap");
 
+var _Modal = _interopRequireDefault(require("../../Modal/Modal"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 const Vote = props => {
   const [values, setValues] = (0, _react.useState)({
-    confirm: false
+    confirm: false,
+    showModal: false
   });
 
   const VoteGivenFinalNo = event => {
@@ -51698,10 +51731,18 @@ const Vote = props => {
 
   const VoteGivenFinalYes = event => {
     event.preventDefault();
+    setValues({ ...values,
+      showModal: true
+    });
     window.contract.sendVote({
       electionId: props.electionId,
       candidateId: props.candidateId,
       userId: props.userId
+    }).then(res => {
+      setValues({ ...values,
+        showModal: false
+      });
+      window.location.reload();
     }); //alert('You have voted for ' + props.candidateId);
     //window.location.href = "http://localhost:1234/vote";
     //smart
@@ -51718,7 +51759,11 @@ const Vote = props => {
     style: {
       width: '100%'
     }
-  }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
+  }, /*#__PURE__*/_react.default.createElement(_Modal.default, {
+    show: values.showModal,
+    message: "Recording Vote...Please Wait",
+    title: "Voting Process"
+  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
     style: {
       display: 'flex',
       width: '100%'
@@ -51758,7 +51803,7 @@ const Vote = props => {
 
 var _default = Vote;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"../node_modules/near-api-js/lib/key_stores/keystore.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../../Modal/Modal":"Frontend/Modal/Modal.js"}],"../node_modules/near-api-js/lib/key_stores/keystore.js":[function(require,module,exports) {
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyStore = void 0;
@@ -70145,12 +70190,16 @@ const Vote = props => {
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Col, {
     sm: 4
   }, /*#__PURE__*/_react.default.createElement(_ListGroup.default, null, Object.keys(values.electionList).length !== 0 ? values.electionList.map(election => {
+    let stA = new Date(election.startTime).toString().split(" ");
+    let startTime = stA[1] + " " + stA[2] + " " + stA[3] + " " + stA[4];
+    let etA = new Date(election.endTime).toString().split(" ");
+    let endTime = etA[1] + " " + etA[2] + " " + etA[3] + " " + etA[4];
     return /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
       key: election._id,
       action: true,
       href: "#" + election._id,
       onClick: () => changeCurrent(election)
-    }, election.name);
+    }, election.name, /*#__PURE__*/_react.default.createElement("br", null), "Timings: " + startTime + " to " + endTime);
   }) : /*#__PURE__*/_react.default.createElement(_ListGroup.default.Item, {
     key: "none",
     action: true,
@@ -70319,35 +70368,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"Frontend/Modal/Modal.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _reactBootstrap = require("react-bootstrap");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-const CustomModal = props => {
-  return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal, _extends({}, props, {
-    size: "lg",
-    "aria-labelledby": "contained-modal-title-vcenter",
-    centered: true
-  }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Header, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Title, {
-    id: "contained-modal-title-vcenter"
-  }, props.title)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Body, null, /*#__PURE__*/_react.default.createElement("p", null, props.message)));
-};
-
-var _default = CustomModal;
-exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js"}],"Frontend/Components/Register Form/Register.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"Frontend/Components/Register Form/Register.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -76843,8 +76864,11 @@ const Home = props => {
     ongoingElection: ['2', '3'],
     electionInvited: ['5', '6', '7', '8', '9']
   });
-  (0, _react.useEffect)(() => {//get all data from mongo db
+  (0, _react.useEffect)(() => {
+    //get all data from mongo db
     //convert to string and split and setValues
+    let currentTime = new Date().toISOString();
+    let email = localStorage.getItem("email");
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Container, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
@@ -76882,7 +76906,7 @@ const Home = props => {
       width: '300px',
       marginRight: '20px'
     },
-    src: "https://images1.livehindustan.com/uploadimage/library/2021/07/02/16_9/16_9_6/aadhar_card__1625226505.jpg"
+    src: "https://eci.gov.in/uploads/monthly_2018_09/eci200x200.png.0b64512a61d9374ccebae62e674b8879.png"
   }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
     style: {
       marginLeft: '10px',
@@ -99937,6 +99961,10 @@ const Conducted = props => {
   };
 
   let val = 0;
+  let stA = new Date(props.election.startTime).toString().split(" ");
+  let startTime = stA[0] + ", " + stA[1] + " " + stA[2] + " " + stA[3] + " " + stA[4];
+  let etA = new Date(props.election.endTime).toString().split(" ");
+  let endTime = etA[0] + ", " + etA[1] + " " + etA[2] + " " + etA[3] + " " + etA[4];
   return /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
       width: '100%'
@@ -99964,7 +99992,8 @@ const Conducted = props => {
     variant: props.status === "Ongoing" ? "warning" : props.status === "Future" ? "secondary" : "danger",
     style: {
       marginRight: '20px',
-      width: '100px'
+      width: '100px',
+      fontWeight: '500'
     }
   }, props.status), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "outline-primary",
@@ -99972,14 +100001,14 @@ const Conducted = props => {
       marginRight: '20px',
       width: '200px'
     }
-  }, props.election.startTime.split("T")[0] + " " + props.election.startTime.split("T")[1].substring(0, 5)), "To", /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
+  }, startTime), "To", /*#__PURE__*/_react.default.createElement(_reactBootstrap.Button, {
     variant: "outline-primary",
     style: {
       marginRight: '20px',
       marginLeft: '20px',
       width: '200px'
     }
-  }, props.election.endTime.split("T")[0] + " " + props.election.endTime.split("T")[1].substring(0, 5)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
+  }, endTime), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
     style: {
       marginLeft: '20px'
     }
@@ -100086,7 +100115,17 @@ const Vote = props => {
       }));
     });
   } else {
-    fetched = /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, null, "No Elections Conducted");
+    fetched = /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
+      style: {
+        width: '100%',
+        backgroundColor: "white"
+      }
+    }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
+      style: {
+        display: 'flex',
+        width: '100%'
+      }
+    }, "You haven't conducted any elections"));
   }
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Container, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Tab.Container, {
@@ -102423,7 +102462,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61275" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64310" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

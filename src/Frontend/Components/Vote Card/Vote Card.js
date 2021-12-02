@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
+import CustomModal from '../../Modal/Modal';
 
 const Vote = (props) => {
     const [values, setValues] = useState({
-        confirm: false
+        confirm: false,
+        showModal: false
     });
 
     const VoteGivenFinalNo = (event) => {
@@ -16,7 +18,18 @@ const Vote = (props) => {
 
     const VoteGivenFinalYes = (event) => {
         event.preventDefault();
-        window.contract.sendVote({electionId: props.electionId, candidateId: props.candidateId, userId: props.userId});
+        setValues({
+            ...values,
+            showModal: true
+        });
+        window.contract.sendVote({electionId: props.electionId, candidateId: props.candidateId, userId: props.userId})
+            .then((res) =>{
+                setValues({
+                    ...values, 
+                    showModal: false
+                })
+                window.location.reload();
+            });
         //alert('You have voted for ' + props.candidateId);
         //window.location.href = "http://localhost:1234/vote";
         //smart
@@ -31,6 +44,7 @@ const Vote = (props) => {
     }
     return (
         <Card style={{ width: '100%' }}>
+            <CustomModal show = {values.showModal} message = "Recording Vote...Please Wait" title = "Voting Process"/>
             <Card.Body style = {{display: 'flex', width: '100%'}}>
                 {values.confirm? (
                     <>

@@ -59,15 +59,19 @@ const Conducted = (props) => {
         })
     }
     let val = 0;
+    let stA = new Date(props.election.startTime).toString().split(" ");
+    let startTime = stA[0] + ", " + stA[1] + " " + stA[2] + " " + stA[3] + " " + stA[4];
+    let etA = new Date(props.election.endTime).toString().split(" ")
+    let endTime = etA[0] + ", " + etA[1] + " " + etA[2] + " " + etA[3] + " " + etA[4];
     return (
         <Card style={{ width: '100%' }}>
             <Card.Body style = {{display: 'flex', width: '100%'}}>
                 <Button variant="success" disabled = {(props.status === "Ongoing" || props.status === "Future") ? true : false} style = {{marginRight: '20px'}} onClick = {showResult}>Show Results</Button>
                 <Button variant="success" disabled = {(props.status === "Ongoing" || props.status === "Future" || props.election.resultsDeclared) ? true : false} style = {{marginRight: '20px'}} onClick = {declareResult}>Delcare Results</Button>
-                <Button variant={props.status === "Ongoing"? "warning": props.status === "Future"? "secondary":"danger"} style = {{marginRight: '20px', width: '100px'}}>{props.status}</Button>
-                <Button variant="outline-primary" style = {{marginRight: '20px',  width: '200px'}}>{props.election.startTime.split("T")[0] + " " + props.election.startTime.split("T")[1].substring(0, 5)}</Button>
+                <Button variant={props.status === "Ongoing"? "warning": props.status === "Future"? "secondary":"danger"} style = {{marginRight: '20px', width: '100px', fontWeight: '500'}}>{props.status}</Button>
+                <Button variant="outline-primary" style = {{marginRight: '20px',  width: '200px'}}>{startTime}</Button>
                 To
-                <Button variant="outline-primary" style = {{marginRight: '20px', marginLeft: '20px', width: '200px'}}>{props.election.endTime.split("T")[0] + " " + props.election.endTime.split("T")[1].substring(0, 5)}</Button>
+                <Button variant="outline-primary" style = {{marginRight: '20px', marginLeft: '20px', width: '200px'}}>{endTime}</Button>
                 <Card.Title style = {{marginLeft: '20px'}}>{props.election.name}</Card.Title>
             </Card.Body>
             {

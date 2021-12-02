@@ -74,9 +74,15 @@ const Vote = (props) => {
                     <ListGroup>
                         {Object.keys(values.electionList).length !== 0? (
                             values.electionList.map((election) => {
+                                let stA = new Date(election.startTime).toString().split(" ");
+                                let startTime = stA[1] + " " + stA[2] + " " + stA[3] + " " + stA[4];
+                                let etA = new Date(election.endTime).toString().split(" ")
+                                let endTime = etA[1] + " " + etA[2] + " " + etA[3] + " " + etA[4];
                                 return (
                                     <ListGroup.Item key = {election._id} action href={"#"+election._id} onClick = {() => changeCurrent(election)}>
                                         {election.name}
+                                        <br/>
+                                        {"Timings: " + startTime + " to " + endTime}
                                     </ListGroup.Item>
                                 )
                             })) : (

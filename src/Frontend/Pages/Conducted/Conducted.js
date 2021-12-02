@@ -64,7 +64,13 @@ const Vote = (props) => {
                         );
                     });
     } else {
-        fetched = (<Card>No Elections Conducted</Card>);
+        fetched = (
+            <Card style={{ width: '100%', backgroundColor: "white" }} >
+                <Card.Body style = {{display: 'flex', width: '100%'}}>
+                    You haven't conducted any elections
+                </Card.Body>
+            </Card>
+        );
     }
 
     return (
