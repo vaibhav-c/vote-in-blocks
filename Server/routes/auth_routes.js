@@ -168,13 +168,36 @@ router.post('/voting',async(req,res)=>{
         resultsDeclared
     })
     console.log(candidateDetails);
-
-    /*var mailOptions = {
+    var stA = new Date(req.body.election.startTime).toString().split(" ");
+    var start = stA[0] + ", " + stA[1] + " " + stA[2] + " " + stA[3] + " " + stA[4];
+    var etA = new Date(req.body.election.endTime).toString().split(" ")
+    var end = etA[0] + ", " + etA[1] + " " + etA[2] + " " + etA[3] + " " + etA[4];
+    var mailOptions = {
         from: process.env.email,
         to: invites,
-        subject: 'Invites',
+        subject: `Invites for Election ${req.body.election.name}`,
         html: `
-            
+        <html>
+            <head>
+            </head>
+            <body style = "text-align: center; background-color: #3396FF;">
+            <img src="https://i2.wp.com/www.yesmagazine.org/wp-content/uploads/2020/01/ranked-choice-voting-burton.jpg?fit=1400%2C840&quality=90&ssl=1" class="img-rounded">
+            <div>
+                <h1>
+                    You are invited to vote in ${req.body.election.name}
+                </h1>
+                <h2>
+                    ${req.body.election.desc}
+                </h2>
+                <h2>
+                    The election is live from <b>${start}</b> to <b>${end}</b>
+                </h2>
+                <h2>
+                    <a href = "http://localhost:1234" style = "color: black">Click here</a> to vote
+                </h2>
+            </div>
+            </body>
+        </html>
         `
     };
 
@@ -184,7 +207,7 @@ router.post('/voting',async(req,res)=>{
         } else {
           console.log('Email sent: ' + info.response);
         }
-    });*/
+    });
 
     vote.save((err) => {
         if (err) {
@@ -231,18 +254,18 @@ router.get('/totalelection',async(req,res)=>{
     })
     Vote.find().then((elec) => {
         let count = 0;
-        for(let i=0;i<elec.length;i++)
-        {
+        for(let i=0;i<elec.length;i++) {
             if(elec[i].startTime<time && elec[i].endTime>time)
                 count++
         }
         res.json({
-            electionSize: election.length,
+            electionSize: elec.length,
             invitedSize: invited.length,
             conductedSize: conducted.length,
             live: count
         })
       }).catch((err)=>{
+          console.log(err);
           res.json({
               err
           })

@@ -39,6 +39,7 @@ const Vote = (props) => {
                 }
                 
             }).catch((err)=>{
+                alert('Some Error Occurred');
                 console.log(err.response);
             })
     }, []);

@@ -70231,7 +70231,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"Frontend/Components/Login Form/Login.css":[function(require,module,exports) {
+},{"./..\\..\\..\\assets\\blockchain1.jpg":[["blockchain1.f09d026a.jpg","assets/blockchain1.jpg"],"assets/blockchain1.jpg"],"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"Frontend/Components/Login Form/Login.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -76818,6 +76818,8 @@ var _reactJwt = require("react-jwt");
 
 var _context = require("../../../Context/context");
 
+var _axios = _interopRequireDefault(require("axios"));
+
 require("./Home.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -76867,8 +76869,26 @@ const Home = props => {
   (0, _react.useEffect)(() => {
     //get all data from mongo db
     //convert to string and split and setValues
-    let currentTime = new Date().toISOString();
+    let time = new Date().toISOString();
     let email = localStorage.getItem("email");
+
+    _axios.default.get(`http://localhost:5000/api/totalelection`, {
+      params: {
+        email: email,
+        time: time
+      }
+    }).then(res => {
+      console.log(res); //console.log(res.data.electionsize.toString().split(""))
+
+      setValues({ ...values,
+        totalElections: res.data.electionSize.toString().split(""),
+        electionConducted: res.data.conductedSize.toString().split(""),
+        ongoingElection: res.data.live.toString().split(""),
+        electionInvited: res.data.invitedSize.toString().split("")
+      });
+    }).catch(err => {
+      alert('Some Error Occurred');
+    });
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Container, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card, {
     style: {
@@ -76877,7 +76897,7 @@ const Home = props => {
       marginBottom: '80px',
       height: '100%',
       display: 'flex',
-      backgroundColor: "black"
+      backgroundColor: "#00111a"
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, {
     style: {
@@ -76892,7 +76912,7 @@ const Home = props => {
       height: '100px',
       width: '100px'
     },
-    src: "https://eci.gov.in/uploads/monthly_2018_09/eci200x200.png.0b64512a61d9374ccebae62e674b8879.png"
+    src: "https://store-images.s-microsoft.com/image/apps.25988.13510798883030072.52a047f9-3b10-4f05-a51b-80e15c987161.d42159fa-c6fc-4d4e-b895-e2544cc4db51"
   }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, {
     style: {
       marginLeft: '20px'
@@ -76947,7 +76967,7 @@ const Home = props => {
       width: '18rem',
       margin: 'auto',
       height: '15rem',
-      backgroundColor: 'darkblue',
+      backgroundColor: '#000d1a',
       color: 'white'
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Total Elections Conducted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
@@ -76971,7 +76991,7 @@ const Home = props => {
       width: '18rem',
       margin: 'auto',
       height: '15rem',
-      backgroundColor: 'darkblue',
+      backgroundColor: '#000d1a',
       color: 'white'
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Elections You Conducted"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
@@ -76985,7 +77005,7 @@ const Home = props => {
     return /*#__PURE__*/_react.default.createElement("span", {
       className: "numbers__window"
     }, /*#__PURE__*/_react.default.createElement("span", {
-      className: "numbers__window__digit numbers__window__digit--2",
+      className: "numbers__window__digit numbers__window__digit--1",
       "data-fake": "8642519073"
     }, c));
   })))), /*#__PURE__*/_react.default.createElement("div", {
@@ -76995,7 +77015,7 @@ const Home = props => {
       width: '18rem',
       margin: 'auto',
       height: '15rem',
-      backgroundColor: 'darkblue',
+      backgroundColor: '#000d1a',
       color: 'white'
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Elections Invited"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
@@ -77006,7 +77026,7 @@ const Home = props => {
     return /*#__PURE__*/_react.default.createElement("span", {
       className: "numbers__window"
     }, /*#__PURE__*/_react.default.createElement("span", {
-      className: "numbers__window__digit numbers__window__digit--3",
+      className: "numbers__window__digit numbers__window__digit--1",
       "data-fake": "8642519073"
     }, c));
   })))), /*#__PURE__*/_react.default.createElement("div", {
@@ -77016,7 +77036,7 @@ const Home = props => {
       width: '18rem',
       margin: 'auto',
       height: '15rem',
-      backgroundColor: 'darkblue',
+      backgroundColor: '#000d1a',
       color: 'white'
     }
   }, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Body, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Title, null, "Ongoing Elections"), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Card.Subtitle, {
@@ -77027,7 +77047,7 @@ const Home = props => {
     return /*#__PURE__*/_react.default.createElement("span", {
       className: "numbers__window"
     }, /*#__PURE__*/_react.default.createElement("span", {
-      className: "numbers__window__digit numbers__window__digit--4",
+      className: "numbers__window__digit numbers__window__digit--1",
       "data-fake": "8642519073"
     }, c));
   }))))), /*#__PURE__*/_react.default.createElement("br", null));
@@ -77035,7 +77055,7 @@ const Home = props => {
 
 var _default = Home;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","react-jwt":"../node_modules/react-jwt/dist/index.modern.js","../../../Context/context":"Context/context.js","./Home.css":"Frontend/Pages/Home/Home.css"}],"../node_modules/uuid4/browser.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","react-jwt":"../node_modules/react-jwt/dist/index.modern.js","../../../Context/context":"Context/context.js","axios":"../node_modules/axios/index.js","./Home.css":"Frontend/Pages/Home/Home.css"}],"../node_modules/uuid4/browser.js":[function(require,module,exports) {
 var define;
 (function() {
   function getBytes() {
@@ -99444,6 +99464,7 @@ const Election = props => {
         //setFormData({})
         //window.location.reload();
         console.log(err);
+        alert('Some Error Occurred');
       });
 
       console.log(values);
@@ -100085,6 +100106,7 @@ const Vote = props => {
         alert('Some Error Occurred');
       }
     }).catch(err => {
+      alert('Some Error Occurred');
       console.log(err.response);
     });
   }, []);
@@ -102462,7 +102484,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64310" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56124" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

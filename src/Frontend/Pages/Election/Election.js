@@ -201,6 +201,7 @@ const Election = (props) => {
                     //setFormData({})
                     //window.location.reload();
                     console.log(err);
+                    alert('Some Error Occurred');
                 })
             
             console.log(values);
