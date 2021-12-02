@@ -183,18 +183,20 @@ router.post('/voting',async(req,res)=>{
             <body style = "text-align: center; background-color: #3396FF;">
             <img src="https://i2.wp.com/www.yesmagazine.org/wp-content/uploads/2020/01/ranked-choice-voting-burton.jpg?fit=1400%2C840&quality=90&ssl=1" class="img-rounded">
             <div>
-                <h1>
+                <h1 style = "color: black;">
                     You are invited to vote in ${req.body.election.name}
                 </h1>
-                <h2>
+                <h2 style = "color: black;">
                     ${req.body.election.desc}
                 </h2>
-                <h2>
-                    The election is live from <b>${start}</b> to <b>${end}</b>
+                <h2 style = "color: black;">
+                    The election is live between<br><b>${start}</b> and <b>${end}</b>
                 </h2>
-                <h2>
-                    <a href = "http://localhost:1234" style = "color: black">Click here</a> to vote
+                <h2 style = "color: black;">
+                    <a href = "http://localhost:1234" style = "color: black;">Click here</a> to vote
                 </h2>
+                <br>
+                <br>
             </div>
             </body>
         </html>
