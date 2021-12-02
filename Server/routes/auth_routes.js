@@ -2,6 +2,8 @@ const express = require('express');
 const {validationResult} = require('express-validator');
 const jwt = require('jsonwebtoken');
 
+const bcrypt = require('bcrypt');
+
 const nodemailer = require("nodemailer");
 
 const errorHandler = require('../Helper/dbErrorHandler');
@@ -11,6 +13,8 @@ const passport = require('passport')
 require('../passport/google')
 
 const router = express.Router();
+
+const saltRounds = 10;
 
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['email','profile'] }));
@@ -38,7 +42,6 @@ router.get('/auth/google/callback',
 );
 
 router.post('/register',async(req,res)=>{
-    console.log("here at register")
     const { name,
         email,
         password,
@@ -69,26 +72,33 @@ router.post('/register',async(req,res)=>{
             })
         }
     }
-    const user = new User({
-        name,
-        email,
-        password,
-        dateOfBirth,
-        aadhar
+    let pass;
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+        pass = hash;
+        console.log(pass);
+        const user = new User({
+            name,
+            email,
+            password: pass,
+            dateOfBirth,
+            aadhar
+        });
+        console.log(user)
+        user.save((err) => {
+            if (err) {
+             // console.log(err)
+              return res.status(400).json({
+                errors: errorHandler(err)
+              });
+            } else {
+              return res.json({
+                success: true,
+                message: 'Signup success'
+              });
+            }
+        })
     });
-    user.save((err) => {
-        if (err) {
-          console.log('Save error', errorHandler(err));
-          return res.status(400).json({
-            errors: errorHandler(err)
-          });
-        } else {
-          return res.json({
-            success: true,
-            message: 'Signup success'
-          });
-        }
-    })
+    
 });
 
 
@@ -99,7 +109,8 @@ router.post('/login',async (req,res)=>{
         email
     })
     if(foundemail){
-            if(foundemail.password === password){
+        bcrypt.compare(password, foundemail.password, function(err, result) {
+            if(result == true){
                 const token = jwt.sign({
                     id: foundemail._id,
                     name: foundemail.name,
@@ -118,6 +129,7 @@ router.post('/login',async (req,res)=>{
                     error: "Email or Password does not match"
                 })
             }
+        });
     }
     else{
         return res.status(400).json({
