@@ -11,12 +11,12 @@ const CustomModal = (props) => {
       >
         <Modal.Header>
           <Modal.Title id="contained-modal-title-vcenter">
-            Register Process
+            {props.title}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            Verifying Details....Please wait
+            {props.message}
           </p>
         </Modal.Body>
       </Modal>

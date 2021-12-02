@@ -70342,7 +70342,7 @@ const CustomModal = props => {
     centered: true
   }), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Header, null, /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Title, {
     id: "contained-modal-title-vcenter"
-  }, "Register Process")), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Body, null, /*#__PURE__*/_react.default.createElement("p", null, "Verifying Details....Please wait")));
+  }, props.title)), /*#__PURE__*/_react.default.createElement(_reactBootstrap.Modal.Body, null, /*#__PURE__*/_react.default.createElement("p", null, props.message)));
 };
 
 var _default = CustomModal;
@@ -70538,7 +70538,9 @@ const Register = props => {
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Modal.default, {
-    show: values.showModal
+    show: values.showModal,
+    message: "Verifying Details....Please wait",
+    title: "Register Process"
   }), /*#__PURE__*/_react.default.createElement("div", {
     className: "containerx"
   }, /*#__PURE__*/_react.default.createElement("div", {
@@ -99138,6 +99140,7 @@ var define;
   }]);
 });
 },{}],"../Server/models/auth_models.js":[function(require,module,exports) {
+var Buffer = require("buffer").Buffer;
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
@@ -99164,12 +99167,16 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  aadharImg: {
+    data: Buffer,
+    contentType: String
   }
 }, {
   timestamps: true
 });
 module.exports = mongoose.model('User', userSchema);
-},{"mongoose":"../Server/node_modules/mongoose/dist/browser.umd.js"}],"Frontend/Pages/Election/Election.js":[function(require,module,exports) {
+},{"mongoose":"../Server/node_modules/mongoose/dist/browser.umd.js","buffer":"../node_modules/node-libs-browser/node_modules/buffer/index.js"}],"Frontend/Pages/Election/Election.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -99192,6 +99199,8 @@ var _axios = _interopRequireDefault(require("axios"));
 var _auth_models = require("../../../../Server/models/auth_models");
 
 var _context = require("../../../Context/context");
+
+var _Modal = _interopRequireDefault(require("../../Modal/Modal"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -99223,7 +99232,8 @@ const Election = props => {
       invites: [],
       resultsDeclared: false,
       adminEmail: localStorage.getItem("email")
-    }
+    },
+    showModal: false
   });
 
   const nextPage = event => {
@@ -99340,6 +99350,9 @@ const Election = props => {
   };
 
   const handleFiles = files => {
+    setValues({ ...values,
+      showModal: true
+    });
     var reader = new FileReader();
 
     reader.onload = function (e) {
@@ -99353,7 +99366,8 @@ const Election = props => {
 
       temp.invites = email;
       setValues({ ...values,
-        election: temp
+        election: temp,
+        showModal: false
       });
     };
 
@@ -99415,7 +99429,11 @@ const Election = props => {
   let val = 0;
   let today = new Date();
   let dt = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0') + "-" + String(today.getDate()).padStart(2, '0') + "T" + today.getHours() + ":" + today.getMinutes();
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement("div", {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Menubar.default, null), /*#__PURE__*/_react.default.createElement(_Modal.default, {
+    show: values.showModal,
+    message: "Reading Files...Please Wait",
+    title: "Election Process"
+  }), /*#__PURE__*/_react.default.createElement("div", {
     className: "containerx"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "row"
@@ -99599,7 +99617,7 @@ const Election = props => {
 
 var _default = Election;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","react-file-reader":"../node_modules/react-file-reader/index.js","axios":"../node_modules/axios/index.js","../../../../Server/models/auth_models":"../Server/models/auth_models.js","../../../Context/context":"Context/context.js"}],"Frontend/Components/Result Card/Result Card.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-bootstrap":"../node_modules/react-bootstrap/esm/index.js","../../Components/Menubar/Menubar":"Frontend/Components/Menubar/Menubar.js","react-elastic-carousel":"../node_modules/react-elastic-carousel/dist/index.es.js","react-file-reader":"../node_modules/react-file-reader/index.js","axios":"../node_modules/axios/index.js","../../../../Server/models/auth_models":"../Server/models/auth_models.js","../../../Context/context":"Context/context.js","../../Modal/Modal":"Frontend/Modal/Modal.js"}],"Frontend/Components/Result Card/Result Card.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -100678,7 +100696,9 @@ const Details = props => {
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Modal.default, {
-    show: values.showModal
+    show: values.showModal,
+    message: "Verifying Details....Please wait",
+    title: "Register Process"
   }), /*#__PURE__*/_react.default.createElement("div", {
     className: "containerx",
     style: {
@@ -102403,7 +102423,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64385" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61275" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

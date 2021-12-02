@@ -6,6 +6,7 @@ import ReactFileReader from 'react-file-reader';
 import axios from 'axios';
 import { getMaxListeners } from '../../../../Server/models/auth_models';
 import { Context } from '../../../Context/context';
+import CustomModal from '../../Modal/Modal';
 
 
 const Election = (props) => {
@@ -32,7 +33,8 @@ const Election = (props) => {
             invites: [],
             resultsDeclared: false,
             adminEmail: localStorage.getItem("email")
-        }
+        },
+        showModal: false
     });
 
     const nextPage = (event) => {
@@ -137,6 +139,10 @@ const Election = (props) => {
     }
 
     const handleFiles = (files) => {
+        setValues({
+            ...values,
+            showModal: true
+        });
         var reader = new FileReader();
         reader.onload = function(e) {
             let arr = reader.result.split("\r\n");
@@ -148,7 +154,8 @@ const Election = (props) => {
             temp.invites = email;
             setValues({
                 ...values,
-                election: temp
+                election: temp,
+                showModal: false
             })
         }
         reader.readAsText(files[0]);
@@ -207,6 +214,7 @@ const Election = (props) => {
     return (
         <>
             <Menubar/>
+            <CustomModal show = {values.showModal} message = {"Reading Files...Please Wait"} title = {"Election Process"}></CustomModal>
             <div className="containerx">
                 <div className="row">
                     <div className="col-sm-2 col-md-7 col-lg-5 mx-auto">

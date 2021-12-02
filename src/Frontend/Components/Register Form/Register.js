@@ -159,7 +159,7 @@ const Register = (props) => {
 
     return (
         <>
-        <CustomModal show={values.showModal}/>
+        <CustomModal show={values.showModal} message = {"Verifying Details....Please wait"} title = {"Register Process"}/>
         <div className="containerx">
         <div className="row">
             <div className="col-sm-2 col-md-7 col-lg-10 mx-auto">

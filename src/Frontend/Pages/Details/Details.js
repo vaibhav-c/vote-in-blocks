@@ -183,7 +183,7 @@ const Details = (props) => {
 
     return (
         <>
-        <CustomModal show={values.showModal} />
+        <CustomModal show = {values.showModal} message = {"Verifying Details....Please wait"} title = {"Register Process"}></CustomModal>
         <div className="containerx" style = {{marginTop: '50px'}}>
         <div className="row">
             <div className="col-sm-2 col-md-7 col-lg-10 mx-auto">
