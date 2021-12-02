@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME ||'VotingApp'
+const CONTRACT_NAME = process.env.CONTRACT_NAME ||'votingapp.vaibhav-c.testnet'
 const server = process.env.server ||'http://localhost:5000'
 
 function getConfig(env) {
