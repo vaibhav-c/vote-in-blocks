@@ -9,7 +9,8 @@ const nodemailer = require("nodemailer");
 const errorHandler = require('../Helper/dbErrorHandler');
 const User = require('../models/auth_models');
 const Vote = require('../models/voting_model');
-const passport = require('passport')
+const passport = require('passport');
+const { Routes } = require('react-router');
 require('../passport/google')
 
 const router = express.Router();
@@ -220,6 +221,33 @@ router.get('/conducted',async(req,res)=>{
     
 })
 
+router.get('/totalelection',async(req,res)=>{
+    const { email,time } = req.query
+    let invited = await Vote.find({
+        invites: email
+    })
+    let conducted = await Vote.find({
+        adminEmail: email
+    })
+    Vote.find().then((elec) => {
+        let count = 0;
+        for(let i=0;i<elec.length;i++)
+        {
+            if(elec[i].startTime<time && elec[i].endTime>time)
+                count++
+        }
+        res.json({
+            electionSize: election.length,
+            invitedSize: invited.length,
+            conductedSize: conducted.length,
+            live: count
+        })
+      }).catch((err)=>{
+          res.json({
+              err
+          })
+      });
+})
 
 router.get('/votingelection',async(req,res)=>{
     const { email } = req.query
